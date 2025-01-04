@@ -1,3 +1,5 @@
+
+run = "cd qr-code-generator && npm install && npm start"
 modules = ["nodejs-20", "web"]
 
 [nix]

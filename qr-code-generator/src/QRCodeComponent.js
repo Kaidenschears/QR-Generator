@@ -1,45 +1,101 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
-// QR Code Generation Utility
 class QRCodeGenerator {
-  static generateQRCode(data, size = 10) {
-    const matrix = this.createBaseMatrix(data, size);
-    return matrix;
-  }
-
-  static createBaseMatrix(data, size) {
+  static generateQRCode(data, size = 29) {
+    // Create base matrix
     const matrix = Array(size).fill().map(() => Array(size).fill(0));
-    const dataBytes = this.stringToBytes(data);
     
-    dataBytes.forEach((byte, index) => {
-      const row = Math.floor(index / size);
-      const col = index % size;
-      if (row < size && col < size) {
-        matrix[row][col] = (byte & 1) ? 1 : 0;
-      }
-    });
+    // Add finder patterns
+    this.addFinderPattern(matrix, 0, 0);
+    this.addFinderPattern(matrix, size - 7, 0);
+    this.addFinderPattern(matrix, 0, size - 7);
     
-    this.addFinderPatterns(matrix);
+    // Add alignment patterns
+    this.addAlignmentPattern(matrix, size - 9, size - 9);
+    
+    // Add timing patterns
+    this.addTimingPatterns(matrix, size);
+    
+    // Add data
+    this.addData(matrix, data, size);
+    
     return matrix;
   }
 
-  static stringToBytes(str) {
-    return str.split('').map(char => char.charCodeAt(0));
-  }
-
-  static addFinderPatterns(matrix) {
-    const size = matrix.length;
-    const patternSize = Math.min(7, Math.floor(size / 7));
-
-    for (let i = 0; i < patternSize; i++) {
-      for (let j = 0; j < patternSize; j++) {
-        if ((i === 0 || i === patternSize - 1 || j === 0 || j === patternSize - 1) || 
-            (i > 1 && i < patternSize - 2 && j > 1 && j < patternSize - 2)) {
-          matrix[i][j] = 1;
+  static addFinderPattern(matrix, startX, startY) {
+    // Outer square
+    for (let i = 0; i < 7; i++) {
+      for (let j = 0; j < 7; j++) {
+        if (i === 0 || i === 6 || j === 0 || j === 6) {
+          matrix[startY + i][startX + j] = 1;
         }
       }
     }
+    
+    // Inner square
+    for (let i = 2; i < 5; i++) {
+      for (let j = 2; j < 5; j++) {
+        matrix[startY + i][startX + j] = 1;
+      }
+    }
+  }
+
+  static addAlignmentPattern(matrix, x, y) {
+    for (let i = -2; i <= 2; i++) {
+      for (let j = -2; j <= 2; j++) {
+        if (Math.abs(i) === 2 || Math.abs(j) === 2 || (i === 0 && j === 0)) {
+          matrix[y + i][x + j] = 1;
+        }
+      }
+    }
+  }
+
+  static addTimingPatterns(matrix, size) {
+    // Horizontal timing pattern
+    for (let i = 8; i < size - 8; i++) {
+      matrix[6][i] = i % 2;
+    }
+    
+    // Vertical timing pattern
+    for (let i = 8; i < size - 8; i++) {
+      matrix[i][6] = i % 2;
+    }
+  }
+
+  static addData(matrix, data, size) {
+    const dataBytes = this.stringToBytes(data);
+    let bitIndex = 0;
+    
+    // Bottom-up, right-to-left pattern
+    for (let x = size - 1; x >= 0; x -= 2) {
+      if (x <= 6) x = 5; // Skip timing pattern
+      
+      for (let y = size - 1; y >= 0; y--) {
+        for (let i = 0; i < 2; i++) {
+          const xx = x - i;
+          if (xx < 0) continue;
+          
+          // Skip patterns
+          if (matrix[y][xx] !== 0) continue;
+          
+          if (bitIndex < dataBytes.length * 8) {
+            const byteIndex = Math.floor(bitIndex / 8);
+            const bit = (dataBytes[byteIndex] >> (7 - (bitIndex % 8))) & 1;
+            matrix[y][xx] = bit;
+            bitIndex++;
+          }
+        }
+      }
+    }
+  }
+
+  static stringToBytes(str) {
+    const bytes = [];
+    for (let i = 0; i < str.length; i++) {
+      bytes.push(str.charCodeAt(i));
+    }
+    return bytes;
   }
 }
 
@@ -53,7 +109,8 @@ const QRCodeComponent = () => {
     if (!canvas) return;
     
     const ctx = canvas.getContext('2d');
-    const cellSize = canvas.width / matrix.length;
+    const size = matrix.length;
+    const cellSize = canvas.width / size;
 
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -70,7 +127,7 @@ const QRCodeComponent = () => {
 
   const handleGenerate = () => {
     if (!qrContent) return;
-    const matrix = QRCodeGenerator.generateQRCode(qrContent, 25);
+    const matrix = QRCodeGenerator.generateQRCode(qrContent, 29);
     renderQRCode(matrix);
   };
 
@@ -80,17 +137,6 @@ const QRCodeComponent = () => {
       link.download = 'qr-code.png';
       link.href = canvasRef.current.toDataURL();
       link.click();
-    }
-  };
-
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setQRContent(e.target.result);
-      };
-      reader.readAsDataURL(file);
     }
   };
 
@@ -105,32 +151,15 @@ const QRCodeComponent = () => {
         >
           Text/URL
         </button>
-        <button 
-          className={`px-4 py-2 rounded ${inputType === 'image' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-          onClick={() => setInputType('image')}
-        >
-          Image
-        </button>
       </div>
 
-      {inputType === 'text' && (
-        <input 
-          type="text"
-          value={qrContent}
-          onChange={(e) => setQRContent(e.target.value)}
-          placeholder="Enter text or URL"
-          className="w-full px-3 py-2 border rounded"
-        />
-      )}
-
-      {inputType === 'image' && (
-        <input 
-          type="file" 
-          accept="image/*"
-          onChange={handleFileUpload}
-          className="w-full px-3 py-2 border rounded"
-        />
-      )}
+      <input 
+        type="text"
+        value={qrContent || 'https://www.star.nesdis.noaa.gov/goes/fulldisk.php?sat=G16'}
+        onChange={(e) => setQRContent(e.target.value)}
+        placeholder="Enter text or URL"
+        className="w-full px-3 py-2 border rounded"
+      />
 
       <div className="flex space-x-4">
         <button 
@@ -141,22 +170,20 @@ const QRCodeComponent = () => {
         </button>
       </div>
 
-      {qrContent && (
-        <div className="mt-4">
-          <canvas 
-            ref={canvasRef}
-            width="300" 
-            height="300"
-            className="mx-auto border"
-          />
-          <button 
-            onClick={handleDownload}
-            className="mt-4 w-full bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Download QR Code
-          </button>
-        </div>
-      )}
+      <div className="mt-4">
+        <canvas 
+          ref={canvasRef}
+          width="300" 
+          height="300"
+          className="mx-auto border"
+        />
+        <button 
+          onClick={handleDownload}
+          className="mt-4 w-full bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Download QR Code
+        </button>
+      </div>
     </div>
   );
 };

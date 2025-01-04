@@ -110,25 +110,51 @@ const QRCodeComponent = () => {
     
     const ctx = canvas.getContext('2d');
     const size = matrix.length;
-    const cellSize = canvas.width / size;
+    const cellSize = Math.floor(canvas.width / size);
 
+    // Clear canvas
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    // Center the QR code
+    const offset = Math.floor((canvas.width - (size * cellSize)) / 2);
+
+    // Draw QR code
     ctx.fillStyle = 'black';
     matrix.forEach((row, y) => {
       row.forEach((cell, x) => {
-        if (cell) {
-          ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+        if (cell === 1) {
+          ctx.fillRect(
+            offset + x * cellSize, 
+            offset + y * cellSize, 
+            cellSize - 1, 
+            cellSize - 1
+          );
         }
       });
     });
   };
 
+  useEffect(() => {
+    if (canvasRef.current) {
+      const ctx = canvasRef.current.getContext('2d');
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    }
+  }, []);
+
   const handleGenerate = () => {
-    if (!qrContent) return;
-    const matrix = QRCodeGenerator.generateQRCode(qrContent, 29);
-    renderQRCode(matrix);
+    if (!qrContent) {
+      alert('Please enter some content first');
+      return;
+    }
+    try {
+      const matrix = QRCodeGenerator.generateQRCode(qrContent, 29);
+      renderQRCode(matrix);
+    } catch (error) {
+      console.error('QR Code generation failed:', error);
+      alert('Failed to generate QR code');
+    }
   };
 
   const handleDownload = () => {

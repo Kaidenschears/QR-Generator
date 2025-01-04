@@ -114,29 +114,40 @@ const QRCodeComponent = () => {
     
     const ctx = canvas.getContext('2d');
     const size = matrix.length;
+    
+    // Increase the canvas size for better resolution
+    canvas.width = 400;
+    canvas.height = 400;
+    
     const cellSize = Math.floor(canvas.width / size);
 
-    // Clear canvas
+    // Add white padding around QR code
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Center the QR code
+    // Center the QR code with more padding
     const offset = Math.floor((canvas.width - (size * cellSize)) / 2);
 
-    // Draw QR code
-    ctx.fillStyle = 'black';
+    // Draw QR code with pure black for better contrast
+    ctx.fillStyle = '#000000';
     matrix.forEach((row, y) => {
       row.forEach((cell, x) => {
         if (cell === 1) {
           ctx.fillRect(
             offset + x * cellSize, 
             offset + y * cellSize, 
-            cellSize - 1, 
-            cellSize - 1
+            cellSize, 
+            cellSize
           );
         }
       });
     });
+    
+    // Add quiet zone (white border)
+    const borderSize = 20;
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = borderSize * 2;
+    ctx.strokeRect(0, 0, canvas.width, canvas.height);
   };
 
   useEffect(() => {
@@ -202,9 +213,10 @@ const QRCodeComponent = () => {
       <div className="mt-4">
         <canvas 
           ref={canvasRef}
-          width="300" 
-          height="300"
+          width="400" 
+          height="400"
           className="mx-auto border"
+          style={{ maxWidth: '100%' }}
         />
         <button 
           onClick={handleDownload}

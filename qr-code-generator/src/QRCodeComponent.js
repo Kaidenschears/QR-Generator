@@ -42,10 +42,15 @@ class QRCodeGenerator {
   }
 
   static addAlignmentPattern(matrix, x, y) {
+    const size = matrix.length;
     for (let i = -2; i <= 2; i++) {
       for (let j = -2; j <= 2; j++) {
-        if (Math.abs(i) === 2 || Math.abs(j) === 2 || (i === 0 && j === 0)) {
-          matrix[y + i][x + j] = 1;
+        const newY = y + i;
+        const newX = x + j;
+        if (newY >= 0 && newY < size && newX >= 0 && newX < size) {
+          if (Math.abs(i) === 2 || Math.abs(j) === 2 || (i === 0 && j === 0)) {
+            matrix[newY][newX] = 1;
+          }
         }
       }
     }
@@ -66,25 +71,24 @@ class QRCodeGenerator {
   static addData(matrix, data, size) {
     const dataBytes = this.stringToBytes(data);
     let bitIndex = 0;
+    const maxBits = Math.min(dataBytes.length * 8, size * size - 100); // Reserve space for patterns
     
     // Bottom-up, right-to-left pattern
-    for (let x = size - 1; x >= 0; x -= 2) {
+    for (let x = size - 1; x >= 0 && bitIndex < maxBits; x -= 2) {
       if (x <= 6) x = 5; // Skip timing pattern
       
-      for (let y = size - 1; y >= 0; y--) {
-        for (let i = 0; i < 2; i++) {
+      for (let y = size - 1; y >= 0 && bitIndex < maxBits; y--) {
+        for (let i = 0; i < 2 && bitIndex < maxBits; i++) {
           const xx = x - i;
-          if (xx < 0) continue;
+          if (xx < 0 || y < 0 || xx >= size || y >= size) continue;
           
           // Skip patterns
           if (matrix[y][xx] !== 0) continue;
           
-          if (bitIndex < dataBytes.length * 8) {
-            const byteIndex = Math.floor(bitIndex / 8);
-            const bit = (dataBytes[byteIndex] >> (7 - (bitIndex % 8))) & 1;
-            matrix[y][xx] = bit;
-            bitIndex++;
-          }
+          const byteIndex = Math.floor(bitIndex / 8);
+          const bit = (dataBytes[byteIndex] >> (7 - (bitIndex % 8))) & 1;
+          matrix[y][xx] = bit;
+          bitIndex++;
         }
       }
     }

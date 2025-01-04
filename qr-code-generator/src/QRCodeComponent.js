@@ -1,27 +1,20 @@
 
-import React, { useState, useRef, useEffect } from 'react';
-import QRCode from 'qrcode';
+import React, { useState, useRef } from 'react';
+import QRCodeUtils from './QRCodeUtils';
 
 const QRCodeComponent = () => {
   const [qrContent, setQRContent] = useState('');
   const canvasRef = useRef(null);
 
-  const generateQRCode = async () => {
+  const generateQRCode = () => {
     if (!qrContent) {
       alert('Please enter some content first');
       return;
     }
 
     try {
-      await QRCode.toCanvas(canvasRef.current, qrContent, {
-        width: 400,
-        margin: 2,
-        errorCorrectionLevel: 'H',
-        color: {
-          dark: '#000000',
-          light: '#ffffff'
-        }
-      });
+      const matrix = QRCodeUtils.generateMatrix(qrContent);
+      QRCodeUtils.renderToCanvas(matrix, canvasRef.current);
     } catch (error) {
       console.error('Error generating QR code:', error);
       alert('Failed to generate QR code');
@@ -46,12 +39,13 @@ const QRCodeComponent = () => {
         value={qrContent}
         onChange={(e) => setQRContent(e.target.value)}
         className="w-full px-3 py-2 border rounded"
+        placeholder="Enter text or URL"
       />
 
       <div className="flex space-x-4">
         <button 
           onClick={generateQRCode}
-          className="flex-grow bg-green-500 text-white px-4 py-2 rounded"
+          className="flex-grow bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
         >
           Generate QR Code
         </button>
@@ -65,7 +59,7 @@ const QRCodeComponent = () => {
         />
         <button 
           onClick={handleDownload}
-          className="mt-4 w-full bg-blue-500 text-white px-4 py-2 rounded"
+          className="mt-4 w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
         >
           Download QR Code
         </button>

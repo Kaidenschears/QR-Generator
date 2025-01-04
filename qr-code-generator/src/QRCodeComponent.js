@@ -6,17 +6,14 @@ const QRCodeComponent = () => {
   const [qrContent, setQRContent] = useState('');
   const canvasRef = useRef(null);
 
-  const generateQRCode = () => {
+  const generateQRCode = async () => {
     if (!qrContent) {
       alert('Please enter some content first');
       return;
     }
 
-    try {
-      const matrix = QRCodeUtils.generateMatrix(qrContent);
-      QRCodeUtils.renderToCanvas(matrix, canvasRef.current);
-    } catch (error) {
-      console.error('Error generating QR code:', error);
+    const success = await QRCodeUtils.generateQRCode(qrContent, canvasRef.current);
+    if (!success) {
       alert('Failed to generate QR code');
     }
   };

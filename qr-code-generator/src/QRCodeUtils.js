@@ -8,10 +8,9 @@ class QRCodeUtils {
 
   static async generateQRCode(text, canvas, version = 2) {
     try {
-      const size = this.getVersionSize(version);
       await QRCode.toCanvas(canvas, text, {
-        width: size * 4, // Adjust width based on version
-        margin: 2,
+        width: 400, // Fixed larger size
+        margin: 4, // Slightly larger margin
         color: {
           dark: '#000000',
           light: '#FFFFFF'

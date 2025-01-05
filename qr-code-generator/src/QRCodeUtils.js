@@ -36,20 +36,27 @@ class QRCodeUtils {
           for (let x = 0; x < moduleCount; x++) {
             const i = (Math.floor(y * dotSize) * canvas.width + Math.floor(x * dotSize)) * 4;
             if (data[i] === 0) {
-              // Enhanced finder pattern detection
-              const isInFinderPattern = (x < 7 && y < 7) || // Top-left
-                                      (x >= moduleCount - 7 && y < 7) || // Top-right
-                                      (x < 7 && y >= moduleCount - 7);   // Bottom-left
+              // Precise finder pattern detection including inner and outer squares
+              const isTopLeft = (x < 7 && y < 7);
+              const isTopRight = (x >= moduleCount - 7 && y < 7);
+              const isBottomLeft = (x < 7 && y >= moduleCount - 7);
               
-              const isFinderBorder = (x === 7 && y <= 7) || 
-                                   (y === 7 && x <= 7) ||
-                                   (x === moduleCount - 8 && y <= 7) ||
-                                   (y === 7 && x >= moduleCount - 8) ||
-                                   (x === 7 && y >= moduleCount - 8) ||
-                                   (y === moduleCount - 8 && x <= 7);
+              // Inner black square (3x3)
+              const isInnerSquare = (
+                (isTopLeft && x >= 2 && x <= 4 && y >= 2 && y <= 4) ||
+                (isTopRight && x >= moduleCount - 5 && x <= moduleCount - 3 && y >= 2 && y <= 4) ||
+                (isBottomLeft && x >= 2 && x <= 4 && y >= moduleCount - 5 && y <= moduleCount - 3)
+              );
+              
+              // Outer black frame (7x7)
+              const isOuterFrame = (
+                ((x < 7 && y < 7) || (x >= moduleCount - 7 && y < 7) || (x < 7 && y >= moduleCount - 7)) &&
+                (x === 0 || x === 6 || x === moduleCount - 7 || x === moduleCount - 1 ||
+                 y === 0 || y === 6 || y === moduleCount - 7 || y === moduleCount - 1)
+              );
               
               ctx.fillStyle = '#000000';
-              if (isInFinderPattern || isFinderBorder) {
+              if (isInnerSquare || isOuterFrame) {
                 // Draw solid squares for finder patterns and borders
                 ctx.fillRect(x * dotSize, y * dotSize, dotSize, dotSize);
               } else {

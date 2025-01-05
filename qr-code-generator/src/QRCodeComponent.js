@@ -69,7 +69,7 @@ const QRCodeComponent = () => {
             onChange={(e) => setVersion(Number(e.target.value))}
             className="px-2 py-1 border rounded"
           >
-            {[1,2,3,4,5,6,40].map(v => (
+            {[1,2,3,4,5,6,30,40].map(v => (
               <option key={v} value={v}>Version {v}</option>
             ))}
           </select>
@@ -80,7 +80,7 @@ const QRCodeComponent = () => {
             className="ml-2"
             title="QR Code Color"
           />
-          {version !== 40 && (
+          {version < 30 && (
             <label className="flex items-center space-x-2 ml-4">
               <input
                 type="checkbox"

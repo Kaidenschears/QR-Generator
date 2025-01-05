@@ -77,8 +77,8 @@ class QRCodeUtils {
             const y = (qrSize - logoSize) / 2;
             
             if (isBackgroundLogo) {
-              // Draw logo as background with medium opacity
-              ctx.globalAlpha = 0.3;
+              // Draw logo as background with 50% opacity
+              ctx.globalAlpha = 0.5;
               ctx.drawImage(logo, 0, 0, canvas.width, canvas.height);
               ctx.globalAlpha = 1.0;
             } else {

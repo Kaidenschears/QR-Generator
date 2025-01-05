@@ -104,9 +104,9 @@ class QRCodeUtils {
           const logo = new Image();
           logo.onload = async () => {
             const qrSize = canvas.width;
-            const logoSize = Math.floor(qrSize * 0.25);
-            const x = (qrSize - logoSize) / 2;
-            const y = (qrSize - logoSize) / 2;
+            const calculatedLogoSize = Math.floor(qrSize * (logoSize / 100));
+            const x = (qrSize - calculatedLogoSize) / 2;
+            const y = (qrSize - calculatedLogoSize) / 2;
             
             if (isBackgroundLogo) {
               // Create temporary canvas for logo
@@ -132,12 +132,12 @@ class QRCodeUtils {
               ctx.globalCompositeOperation = 'source-over';
             } else {
               ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
-              ctx.fillRect(x - 8, y - 8, logoSize + 16, logoSize + 16);
+              ctx.fillRect(x - 8, y - 8, calculatedLogoSize + 16, calculatedLogoSize + 16);
               
               if (version === 40) {
                 ctx.globalAlpha = 0.9;
               }
-              ctx.drawImage(logo, x, y, logoSize, logoSize);
+              ctx.drawImage(logo, x, y, calculatedLogoSize, calculatedLogoSize);
               ctx.globalAlpha = 1.0;
             }
             resolve();

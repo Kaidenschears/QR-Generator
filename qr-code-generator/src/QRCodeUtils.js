@@ -115,9 +115,8 @@ class QRCodeUtils {
               tempCanvas.height = canvas.height;
               const tempCtx = tempCanvas.getContext('2d');
               
-              // Draw logo on temporary canvas
-              // Scale logo based on logoSize parameter
-              const scaledSize = (canvas.width * logoSize) / 100;
+              // Draw logo on temporary canvas with dynamic size
+              const scaledSize = canvas.width * (logoSize / 100);
               const offset = (canvas.width - scaledSize) / 2;
               tempCtx.drawImage(logo, offset, offset, scaledSize, scaledSize);
               tempCtx.globalCompositeOperation = 'destination-in';

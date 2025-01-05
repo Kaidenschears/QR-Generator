@@ -35,16 +35,19 @@ class QRCodeUtils {
         qr.make();
 
         const moduleCount = qr.getModuleCount();
-        const width = qrWidth;
-        const dotSize = width / moduleCount;
-        const padding = dotSize * 0.15;
-        const offset = (canvas.width - width) / 2 + 25; // Add 25px padding
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        // Add white background
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // Create temporary canvas for QR code
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = qrWidth;
+        tempCanvas.height = qrWidth;
+        const tempCtx = tempCanvas.getContext('2d');
+        
+        const dotSize = qrWidth / moduleCount;
+        const padding = dotSize * 0.15;
+        
+        // Draw on temporary canvas
+        tempCtx.fillStyle = '#FFFFFF';
+        tempCtx.fillRect(0, 0, qrWidth, qrWidth);
         
         for (let y = 0; y < moduleCount; y++) {
           for (let x = 0; x < moduleCount; x++) {
@@ -56,22 +59,31 @@ class QRCodeUtils {
               (x < 7 && y >= moduleCount - 7)
             );
 
-            ctx.fillStyle = isFinderPattern ? '#000000' : color;
+            tempCtx.fillStyle = isFinderPattern ? '#000000' : color;
             if (isFinderPattern) {
-              ctx.fillRect(x * dotSize + offset, y * dotSize + offset, dotSize, dotSize);
+              tempCtx.fillRect(x * dotSize, y * dotSize, dotSize, dotSize);
             } else {
-              ctx.beginPath();
-              ctx.roundRect(
-                x * dotSize + offset + padding,
-                y * dotSize + offset + padding,
+              tempCtx.beginPath();
+              tempCtx.roundRect(
+                x * dotSize + padding,
+                y * dotSize + padding,
                 dotSize - 2 * padding,
                 dotSize - 2 * padding,
                 (dotSize - 2 * padding) / 2
               );
-              ctx.fill();
+              tempCtx.fill();
             }
           }
         }
+        
+        // Clear main canvas and draw centered QR code
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        const xOffset = (canvas.width - qrWidth) / 2;
+        const yOffset = (canvas.height - qrWidth) / 2;
+        ctx.drawImage(tempCanvas, xOffset, yOffset);
       }
 
       if (logoUrl) {

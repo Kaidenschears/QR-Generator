@@ -27,13 +27,28 @@ class QRCodeUtils {
       });
 
       if (isRound) {
-        const qr = await QRCode.create({
-          text: text,
+        const qrData = await QRCode.toDataURL(text, {
           version: version,
           errorCorrectionLevel: 'H'
         });
-
-        const moduleCount = Math.sqrt(qr.modules.size);
+        
+        // Create temporary image to get QR code data
+        const img = new Image();
+        await new Promise((resolve) => {
+          img.onload = resolve;
+          img.src = qrData;
+        });
+        
+        // Draw temporary image to get pixel data
+        const tempCanvas = document.createElement('canvas');
+        const moduleCount = this.getVersionSize(version);
+        tempCanvas.width = moduleCount;
+        tempCanvas.height = moduleCount;
+        const tempCtx = tempCanvas.getContext('2d');
+        tempCtx.drawImage(img, 0, 0, moduleCount, moduleCount);
+        const imageData = tempCtx.getImageData(0, 0, moduleCount, moduleCount);
+        
+        const dotSize = canvas.width / moduleCount;
         const dotSize = canvas.width / moduleCount;
         const padding = dotSize * 0.15;
 
@@ -41,7 +56,8 @@ class QRCodeUtils {
         
         for (let y = 0; y < moduleCount; y++) {
           for (let x = 0; x < moduleCount; x++) {
-            if (!qr.modules[y][x]) continue;
+            const idx = (y * moduleCount + x) * 4;
+            if (imageData.data[idx] === 255) continue; // Skip white pixels
             
             const isFinderPattern = (
               (x < 7 && y < 7) ||

@@ -21,8 +21,8 @@ class QRCodeUtils {
         width: version >= 30 ? 380 : 400, // Larger size for v30+
         margin: version >= 30 ? 4 : 4, // Consistent margins
         color: {
-          dark: color,
-          light: '#FFFFFF'
+          dark: isBackgroundLogo ? '#000000' : color, // Force black for better contrast with background logo
+          light: isBackgroundLogo ? 'rgba(255, 255, 255, 0.95)' : '#FFFFFF' // More opaque white background
         }
       });
 

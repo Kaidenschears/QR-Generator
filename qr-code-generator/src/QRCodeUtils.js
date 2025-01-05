@@ -15,7 +15,7 @@ class QRCodeUtils {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
       // First generate the basic QR code
-      await QRCode.toCanvas(canvas, text, {
+      QRCode.toCanvas(canvas, text, {
         version: version,
         errorCorrectionLevel: 'H',
         width: version >= 30 ? 380 : 400, // Larger size for v30+
@@ -89,7 +89,7 @@ class QRCodeUtils {
               ctx.drawImage(logo, 0, 0, canvas.width, canvas.height);
               
               // Redraw QR code with specified opacity
-              await QRCode.toCanvas(canvas, text, {
+              QRCode.toCanvas(canvas, text, {
                 version: version,
                 errorCorrectionLevel: 'H',
                 width: version >= 30 ? 380 : 400,

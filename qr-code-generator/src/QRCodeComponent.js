@@ -84,26 +84,24 @@ const QRCodeComponent = () => {
             </label>
           )}
         </div>
-        {version === 40 && (
-          <div className="flex items-center space-x-2">
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleLogoUpload}
-              accept="image/*"
-              className="hidden"
-            />
-            <div className="flex flex-col space-y-2">
-              <button
-                onClick={() => fileInputRef.current.click()}
-                className="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600"
-              >
-                Add Logo
-              </button>
-              {logoUrl && <canvas ref={previewCanvasRef} className="mx-auto border" width="200" height="200" />}
-            </div>
+        <div className="flex items-center space-x-2">
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleLogoUpload}
+            accept="image/*"
+            className="hidden"
+          />
+          <div className="flex flex-col space-y-2">
+            <button
+              onClick={() => fileInputRef.current.click()}
+              className="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600"
+            >
+              Add Logo
+            </button>
+            {logoUrl && <canvas ref={previewCanvasRef} className="mx-auto border" width="200" height="200" />}
           </div>
-        )}
+        </div>
       </div>
 
       <div className="flex space-x-4">

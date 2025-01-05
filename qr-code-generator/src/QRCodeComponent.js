@@ -4,6 +4,7 @@ import QRCodeUtils from './QRCodeUtils';
 
 const QRCodeComponent = () => {
   const [qrContent, setQRContent] = useState('');
+  const [version, setVersion] = useState(2);
   const canvasRef = useRef(null);
 
   const generateQRCode = async () => {
@@ -12,7 +13,7 @@ const QRCodeComponent = () => {
       return;
     }
 
-    const success = await QRCodeUtils.generateQRCode(qrContent, canvasRef.current);
+    const success = await QRCodeUtils.generateQRCode(qrContent, canvasRef.current, version);
     if (!success) {
       alert('Failed to generate QR code');
     }
@@ -31,13 +32,26 @@ const QRCodeComponent = () => {
     <div className="p-6 max-w-md mx-auto bg-white rounded-xl shadow-md space-y-4">
       <h1 className="text-2xl font-bold text-center">QR Code Generator</h1>
       
-      <input 
-        type="text"
-        value={qrContent}
-        onChange={(e) => setQRContent(e.target.value)}
-        className="w-full px-3 py-2 border rounded"
-        placeholder="Enter text or URL"
-      />
+      <div className="space-y-4">
+        <input 
+          type="text"
+          value={qrContent}
+          onChange={(e) => setQRContent(e.target.value)}
+          className="w-full px-3 py-2 border rounded"
+        />
+        <div className="flex items-center space-x-2">
+          <label className="text-sm">Version:</label>
+          <select 
+            value={version}
+            onChange={(e) => setVersion(Number(e.target.value))}
+            className="px-2 py-1 border rounded"
+          >
+            {[1,2,3,4,5,6].map(v => (
+              <option key={v} value={v}>Version {v}</option>
+            ))}
+          </select>
+        </div>
+      </div>
 
       <div className="flex space-x-4">
         <button 

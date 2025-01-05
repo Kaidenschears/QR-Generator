@@ -6,7 +6,7 @@ class QRCodeUtils {
     return (version * 4) + 17;
   }
 
-  static async generateQRCode(text, canvas, version = 2, logoUrl = null, isRound = false, color = '#000000') {
+  static async generateQRCode(text, canvas, version = 2, logoUrl = null, isRound = false, color = '#000000', isBackgroundLogo = false) {
     try {
       // Set canvas dimensions
       canvas.width = 400;

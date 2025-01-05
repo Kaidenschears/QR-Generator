@@ -83,7 +83,21 @@ class QRCodeUtils {
       }
       return true;
     } catch (error) {
-      console.error('Error generating QR code:', error);
+      console.error('QR Code Generation Error:', {
+        message: error.message,
+        text: text,
+        version: version,
+        hasLogo: !!logoUrl,
+        isRound: isRound
+      });
+      
+      if (error.message.includes('version')) {
+        throw new Error('Invalid QR version - try a lower version number');
+      } else if (error.message.includes('too long')) {
+        throw new Error('Text content is too long for selected QR version');
+      } else {
+        throw new Error(`Failed to generate QR code: ${error.message}`);
+      }
       return false;
     }
   }

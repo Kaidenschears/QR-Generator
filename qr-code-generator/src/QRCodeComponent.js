@@ -33,9 +33,11 @@ const QRCodeComponent = () => {
       return;
     }
 
-    const success = await QRCodeUtils.generateQRCode(qrContent, canvasRef.current, version, logoUrl, isRoundQR);
-    if (!success) {
-      alert('Failed to generate QR code');
+    try {
+      await QRCodeUtils.generateQRCode(qrContent, canvasRef.current, version, logoUrl, isRoundQR);
+    } catch (error) {
+      console.error('QR Code Error:', error);
+      alert(error.message || 'Failed to generate QR code');
     }
   };
 

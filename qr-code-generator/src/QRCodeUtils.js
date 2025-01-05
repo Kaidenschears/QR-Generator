@@ -1,5 +1,6 @@
+
 import QRCode from 'qrcode';
-import qrcode from 'qrcode'; //Import qrcode library
+import qrcodeGenerator from 'qrcode-generator';
 
 class QRCodeUtils {
   static getVersionSize(version) {
@@ -27,7 +28,7 @@ class QRCodeUtils {
       });
 
       if (isRound) {
-        const qr = qrcode(version, 'H');
+        const qr = qrcodeGenerator(version, 'H');
         qr.addData(text);
         qr.make();
 
@@ -39,7 +40,7 @@ class QRCodeUtils {
         
         for (let y = 0; y < moduleCount; y++) {
           for (let x = 0; x < moduleCount; x++) {
-            if (!qr.modules[y][x]) continue;
+            if (!qr.isDark(y, x)) continue;
             
             const isFinderPattern = (
               (x < 7 && y < 7) ||

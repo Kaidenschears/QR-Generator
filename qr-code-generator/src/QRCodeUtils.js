@@ -28,12 +28,13 @@ class QRCodeUtils {
         const data = imageData.data;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        const dotSize = canvas.width / ((version * 4) + 17);
+        const moduleCount = (version * 4) + 17;
+        const dotSize = Math.floor(canvas.width / moduleCount);
         const radius = dotSize / 2.5;
 
-        for (let y = 0; y < canvas.height; y += dotSize) {
-          for (let x = 0; x < canvas.width; x += dotSize) {
-            const i = (y * canvas.width + x) * 4;
+        for (let y = 0; y < moduleCount; y++) {
+          for (let x = 0; x < moduleCount; x++) {
+            const i = (Math.floor(y * dotSize) * canvas.width + Math.floor(x * dotSize)) * 4;
             if (data[i] === 0) {
               ctx.beginPath();
               ctx.arc(x + dotSize/2, y + dotSize/2, radius, 0, Math.PI * 2);

@@ -18,8 +18,9 @@ const QRCodeComponent = () => {
       reader.onload = async (e) => {
         const url = e.target.result;
         setLogoUrl(url);
+        // Generate preview immediately with current settings
         if (previewCanvasRef.current) {
-          await QRCodeUtils.generateQRCode("Preview", previewCanvasRef.current, 40, url, isRoundQR);
+          await QRCodeUtils.generateQRCode("Preview QR Code", previewCanvasRef.current, 40, url, isRoundQR);
         }
       };
       reader.readAsDataURL(file);

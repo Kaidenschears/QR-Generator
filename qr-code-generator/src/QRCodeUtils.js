@@ -35,6 +35,7 @@ class QRCodeUtils {
         qr.make();
 
         const moduleCount = qr.getModuleCount();
+        const actualSize = qrWidth * 0.9; // Make QR code slightly smaller to add padding
         
         // Create temporary canvas for QR code
         const tempCanvas = document.createElement('canvas');
@@ -42,8 +43,9 @@ class QRCodeUtils {
         tempCanvas.height = qrWidth;
         const tempCtx = tempCanvas.getContext('2d');
         
-        const dotSize = qrWidth / moduleCount;
+        const dotSize = actualSize / moduleCount;
         const padding = dotSize * 0.15;
+        const offset = (qrWidth - actualSize) / 2; // Center the QR code
         
         // Draw on temporary canvas
         tempCtx.fillStyle = '#FFFFFF';
@@ -65,8 +67,8 @@ class QRCodeUtils {
             } else {
               tempCtx.beginPath();
               tempCtx.roundRect(
-                x * dotSize + padding,
-                y * dotSize + padding,
+                offset + x * dotSize + padding,
+                offset + y * dotSize + padding,
                 dotSize - 2 * padding,
                 dotSize - 2 * padding,
                 (dotSize - 2 * padding) / 2

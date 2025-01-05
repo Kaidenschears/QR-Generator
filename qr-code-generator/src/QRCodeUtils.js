@@ -8,6 +8,9 @@ class QRCodeUtils {
 
   static async generateQRCode(text, canvas, version = 2, logoUrl = null, isRound = false) {
     try {
+      // Set canvas dimensions
+      canvas.width = 400;
+      canvas.height = 400;
       const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
@@ -24,12 +27,13 @@ class QRCodeUtils {
       });
 
       if (isRound) {
-        const qr = await QRCode.create(text, {
+        const qr = await QRCode.create({
+          text: text,
           version: version,
           errorCorrectionLevel: 'H'
         });
 
-        const moduleCount = this.getVersionSize(version);
+        const moduleCount = Math.sqrt(qr.modules.size);
         const dotSize = canvas.width / moduleCount;
         const padding = dotSize * 0.15;
 

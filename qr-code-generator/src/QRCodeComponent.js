@@ -8,6 +8,7 @@ const QRCodeComponent = () => {
   const [logoUrl, setLogoUrl] = useState(null);
   const [isRoundQR, setIsRoundQR] = useState(false);
   const [qrColor, setQrColor] = useState('#000000');
+  const [isBackgroundLogo, setIsBackgroundLogo] = useState(false);
   const canvasRef = useRef(null);
   const previewCanvasRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -35,7 +36,7 @@ const QRCodeComponent = () => {
     }
 
     try {
-      await QRCodeUtils.generateQRCode(qrContent, canvasRef.current, version, logoUrl, isRoundQR, qrColor);
+      await QRCodeUtils.generateQRCode(qrContent, canvasRef.current, version, logoUrl, isRoundQR, qrColor, isBackgroundLogo);
     } catch (error) {
       console.error('QR Code Error:', error);
       alert(error.message || 'Failed to generate QR code');
@@ -110,6 +111,15 @@ const QRCodeComponent = () => {
               </button>
             ) : (
               <div className="flex flex-col space-y-2">
+                <div className="flex items-center space-x-2 mb-2">
+                  <input
+                    type="checkbox"
+                    checked={isBackgroundLogo}
+                    onChange={(e) => setIsBackgroundLogo(e.target.checked)}
+                    className="form-checkbox"
+                  />
+                  <span>Background Logo</span>
+                </div>
                 <div className="flex space-x-2">
                   <button
                     onClick={() => fileInputRef.current.click()}

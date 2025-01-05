@@ -76,16 +76,23 @@ class QRCodeUtils {
             const x = (qrSize - logoSize) / 2;
             const y = (qrSize - logoSize) / 2;
             
-            // Create a more opaque white background for better contrast
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
-            ctx.fillRect(x - 8, y - 8, logoSize + 16, logoSize + 16);
-            
-            // Draw logo with less transparency for v40
-            if (version === 40) {
-              ctx.globalAlpha = 0.9;  // 90% opacity for v40
+            if (isBackgroundLogo) {
+              // Draw logo as background with low opacity
+              ctx.globalAlpha = 0.1;
+              ctx.drawImage(logo, 0, 0, canvas.width, canvas.height);
+              ctx.globalAlpha = 1.0;
+            } else {
+              // Create a more opaque white background for contrast
+              ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+              ctx.fillRect(x - 8, y - 8, logoSize + 16, logoSize + 16);
+              
+              // Draw logo with appropriate opacity
+              if (version === 40) {
+                ctx.globalAlpha = 0.9;
+              }
+              ctx.drawImage(logo, x, y, logoSize, logoSize);
+              ctx.globalAlpha = 1.0;
             }
-            ctx.drawImage(logo, x, y, logoSize, logoSize);
-            ctx.globalAlpha = 1.0;  // Reset opacity
             resolve();
           };
           logo.onerror = reject;

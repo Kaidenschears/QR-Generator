@@ -1,3 +1,4 @@
+
 import QRCode from 'qrcode';
 import qrcodeGenerator from 'qrcode-generator';
 
@@ -8,7 +9,6 @@ class QRCodeUtils {
 
   static async generateQRCode(text, canvas, version = 2, logoUrl = null, isRound = false, color = '#000000', isBackgroundLogo = false, saturation = 1) {
     try {
-      // Set canvas dimensions with padding
       canvas.width = 500;
       canvas.height = 500;
       const ctx = canvas.getContext('2d');
@@ -16,7 +16,6 @@ class QRCodeUtils {
       ctx.fillStyle = '#FFFFFF';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
-      // First generate the basic QR code
       const qrWidth = 400;
       await QRCode.toCanvas(canvas, text, {
         version: version,
@@ -37,12 +36,10 @@ class QRCodeUtils {
         const moduleCount = qr.getModuleCount();
         const actualSize = qrWidth * 0.9;
         
-        // Create padded matrix representation
-        const padding = 4; // Add 4 cells of padding on each side
+        const padding = 4;
         const paddedSize = moduleCount + (padding * 2);
         const matrix = Array(paddedSize).fill().map(() => Array(paddedSize).fill(0));
         
-        // Fill matrix: 0 = white space, 1 = round dot, 2 = square
         for (let y = 0; y < moduleCount; y++) {
           for (let x = 0; x < moduleCount; x++) {
             if (qr.isDark(y, x)) {
@@ -56,7 +53,6 @@ class QRCodeUtils {
           }
         }
 
-        // Create temporary canvas for QR code
         const tempCanvas = document.createElement('canvas');
         tempCanvas.width = qrWidth;
         tempCanvas.height = qrWidth;
@@ -65,11 +61,9 @@ class QRCodeUtils {
         const dotSize = qrWidth / paddedSize;
         const dotPadding = dotSize * 0.15;
         
-        // Draw on temporary canvas
         tempCtx.fillStyle = '#FFFFFF';
         tempCtx.fillRect(0, 0, qrWidth, qrWidth);
         
-        // Render matrix
         for (let y = 0; y < paddedSize; y++) {
           for (let x = 0; x < paddedSize; x++) {
             if (matrix[y][x] === 0) continue;
@@ -96,7 +90,6 @@ class QRCodeUtils {
           }
         }
         
-        // Clear main canvas and draw centered QR code
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = '#FFFFFF';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -107,29 +100,21 @@ class QRCodeUtils {
       }
 
       if (logoUrl) {
-        const logo = new Image();
-        logo.src = logoUrl;
-        
         await new Promise((resolve, reject) => {
-          logo.onload = () => {
+          const logo = new Image();
+          logo.onload = async () => {
             const qrSize = canvas.width;
-            const logoSize = Math.floor(qrSize * 0.25); // 25% of QR code size
+            const logoSize = Math.floor(qrSize * 0.25);
             const x = (qrSize - logoSize) / 2;
             const y = (qrSize - logoSize) / 2;
             
             if (isBackgroundLogo) {
-              // Save the current canvas state
               ctx.save();
-              
-              // Draw logo scaled to canvas size
               ctx.drawImage(logo, 0, 0, canvas.width, canvas.height);
-              
-              // Apply multiply blend mode for better contrast
               ctx.globalCompositeOperation = 'multiply';
               ctx.fillStyle = '#FFFFFF';
               ctx.fillRect(0, 0, canvas.width, canvas.height);
               
-              // Draw QR code with adjusted opacity
               ctx.globalCompositeOperation = 'source-over';
               ctx.globalAlpha = saturation;
               const tempQrCanvas = document.createElement('canvas');
@@ -146,15 +131,11 @@ class QRCodeUtils {
                 }
               });
               ctx.drawImage(tempQrCanvas, 0, 0);
-              
-              // Restore canvas state
               ctx.restore();
             } else {
-              // Create a more opaque white background for contrast
               ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
               ctx.fillRect(x - 8, y - 8, logoSize + 16, logoSize + 16);
               
-              // Draw logo with appropriate opacity
               if (version === 40) {
                 ctx.globalAlpha = 0.9;
               }
@@ -164,6 +145,7 @@ class QRCodeUtils {
             resolve();
           };
           logo.onerror = reject;
+          logo.src = logoUrl;
         });
       }
       return true;
@@ -183,7 +165,6 @@ class QRCodeUtils {
       } else {
         throw new Error(`Failed to generate QR code: ${error.message}`);
       }
-      return false;
     }
   }
 }

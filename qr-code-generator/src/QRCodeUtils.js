@@ -72,7 +72,7 @@ class QRCodeUtils {
         await new Promise((resolve, reject) => {
           logo.onload = () => {
             const qrSize = canvas.width;
-            const logoSize = Math.floor(qrSize * (version === 40 ? 0.15 : 0.25)); // 15% for v40, 25% for others
+            const logoSize = Math.floor(qrSize * (version === 40 ? 0.13 : 0.25)); // 13% for v40, 25% for others
             const x = (qrSize - logoSize) / 2;
             const y = (qrSize - logoSize) / 2;
             
@@ -80,9 +80,9 @@ class QRCodeUtils {
             ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
             ctx.fillRect(x - 8, y - 8, logoSize + 16, logoSize + 16);
             
-            // Draw logo with more transparency for v40
+            // Draw logo with less transparency for v40
             if (version === 40) {
-              ctx.globalAlpha = 0.7;  // 70% opacity for v40
+              ctx.globalAlpha = 0.9;  // 90% opacity for v40
             }
             ctx.drawImage(logo, x, y, logoSize, logoSize);
             ctx.globalAlpha = 1.0;  // Reset opacity

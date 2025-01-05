@@ -67,8 +67,8 @@ class QRCodeUtils {
             } else {
               tempCtx.beginPath();
               tempCtx.roundRect(
-                offset + x * dotSize + padding,
-                offset + y * dotSize + padding,
+                offset + x * dotSize + padding + (qrWidth - actualSize) / 2,
+                offset + y * dotSize + padding + (qrWidth - actualSize) / 2,
                 dotSize - 2 * padding,
                 dotSize - 2 * padding,
                 (dotSize - 2 * padding) / 2

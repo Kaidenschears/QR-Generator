@@ -30,14 +30,15 @@ class QRCodeUtils {
         
         const moduleCount = (version * 4) + 17;
         const dotSize = canvas.width / moduleCount;
-        const radius = dotSize / 2.5;
+        const radius = dotSize / 1.8; // Increased dot size
+        const offset = dotSize / 2;
 
         for (let y = 0; y < moduleCount; y++) {
           for (let x = 0; x < moduleCount; x++) {
             const i = (Math.floor(y * dotSize) * canvas.width + Math.floor(x * dotSize)) * 4;
             if (data[i] === 0) {
               ctx.beginPath();
-              ctx.arc(x + dotSize/2, y + dotSize/2, radius, 0, Math.PI * 2);
+              ctx.arc(x * dotSize + offset, y * dotSize + offset, radius, 0, Math.PI * 2);
               ctx.fillStyle = '#000000';
               ctx.fill();
             }

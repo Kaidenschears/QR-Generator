@@ -35,8 +35,25 @@ class QRCodeUtils {
         qr.make();
 
         const moduleCount = qr.getModuleCount();
-        const actualSize = qrWidth * 0.9; // Make QR code slightly smaller to add padding
+        const actualSize = qrWidth * 0.9;
         
+        // Create matrix representation
+        const matrix = Array(moduleCount).fill().map(() => Array(moduleCount).fill(0));
+        
+        // Fill matrix: 0 = white space, 1 = round dot, 2 = square
+        for (let y = 0; y < moduleCount; y++) {
+          for (let x = 0; x < moduleCount; x++) {
+            if (qr.isDark(y, x)) {
+              const isFinderPattern = (
+                (x < 7 && y < 7) ||
+                (x >= moduleCount - 7 && y < 7) ||
+                (x < 7 && y >= moduleCount - 7)
+              );
+              matrix[y][x] = isFinderPattern ? 2 : 1;
+            }
+          }
+        }
+
         // Create temporary canvas for QR code
         const tempCanvas = document.createElement('canvas');
         tempCanvas.width = qrWidth;
@@ -45,24 +62,19 @@ class QRCodeUtils {
         
         const dotSize = actualSize / moduleCount;
         const padding = dotSize * 0.15;
-        const offset = (qrWidth - actualSize) / 2; // Center the QR code
+        const offset = (qrWidth - actualSize) / 2;
         
         // Draw on temporary canvas
         tempCtx.fillStyle = '#FFFFFF';
         tempCtx.fillRect(0, 0, qrWidth, qrWidth);
         
+        // Render matrix
         for (let y = 0; y < moduleCount; y++) {
           for (let x = 0; x < moduleCount; x++) {
-            if (!qr.isDark(y, x)) continue;
+            if (matrix[y][x] === 0) continue;
             
-            const isFinderPattern = (
-              (x < 7 && y < 7) ||
-              (x >= moduleCount - 7 && y < 7) ||
-              (x < 7 && y >= moduleCount - 7)
-            );
-
-            tempCtx.fillStyle = isFinderPattern ? '#000000' : color;
-            if (isFinderPattern) {
+            tempCtx.fillStyle = matrix[y][x] === 2 ? '#000000' : color;
+            if (matrix[y][x] === 2) {
               tempCtx.fillRect(
                 offset + x * dotSize + (qrWidth - actualSize) / 2,
                 offset + y * dotSize + (qrWidth - actualSize) / 2,

@@ -29,7 +29,7 @@ class QRCodeUtils {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
         const moduleCount = (version * 4) + 17;
-        const dotSize = Math.floor(canvas.width / moduleCount);
+        const dotSize = canvas.width / moduleCount;
         const radius = dotSize / 2.5;
 
         for (let y = 0; y < moduleCount; y++) {

@@ -27,7 +27,7 @@ class QRCodeUtils {
         }
       });
 
-      if (isRound) {
+      if (isRound && version !== 40) {
         const qr = qrcodeGenerator(version, 'H');
         qr.addData(text);
         qr.make();

@@ -18,8 +18,8 @@ class QRCodeUtils {
       await QRCode.toCanvas(canvas, text, {
         version: version,
         errorCorrectionLevel: 'H',
-        width: 400,
-        margin: 4,
+        width: version === 40 ? 350 : 400, // Smaller size for version 40
+        margin: version === 40 ? 6 : 4, // More margin for version 40
         color: {
           dark: color,
           light: '#FFFFFF'

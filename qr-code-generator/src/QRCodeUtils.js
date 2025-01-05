@@ -109,7 +109,7 @@ class QRCodeUtils {
             const y = (qrSize - logoSize) / 2;
             
             if (isBackgroundLogo) {
-              // Create temporary canvas for blending
+              // Create temporary canvas for logo
               const tempCanvas = document.createElement('canvas');
               tempCanvas.width = canvas.width;
               tempCanvas.height = canvas.height;
@@ -119,17 +119,13 @@ class QRCodeUtils {
               const scaledSize = canvas.width * (logoSize / 100);
               const offset = (canvas.width - scaledSize) / 2;
               
-              // Draw logo on temporary canvas with dynamic size
-              tempCtx.drawImage(logo, 0, 0, canvas.width, canvas.height); // Draw full size first
-              tempCtx.globalCompositeOperation = 'source-in';
-
-              // Draw logo with opacity
-              ctx.save();
-              ctx.globalAlpha = opacity;
-              ctx.drawImage(logo, offset, offset, scaledSize, scaledSize);
-              ctx.restore();
+              // Draw and apply opacity to logo first
+              tempCtx.save();
+              tempCtx.globalAlpha = opacity;
+              tempCtx.drawImage(logo, offset, offset, scaledSize, scaledSize);
+              tempCtx.restore();
               
-              // Blend back to main canvas
+              // Blend with QR code
               ctx.globalCompositeOperation = 'multiply';
               ctx.drawImage(tempCanvas, 0, 0);
               ctx.globalCompositeOperation = 'source-over';

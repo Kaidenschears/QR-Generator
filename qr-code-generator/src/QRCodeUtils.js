@@ -38,7 +38,7 @@ class QRCodeUtils {
         const width = qrWidth;
         const dotSize = width / moduleCount;
         const padding = dotSize * 0.15;
-        const offset = (canvas.width - width) / 2;
+        const offset = (canvas.width - width) / 2 + 25; // Add 25px padding
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         

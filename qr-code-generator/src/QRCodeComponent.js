@@ -7,6 +7,7 @@ const QRCodeComponent = () => {
   const [version, setVersion] = useState(2);
   const [logoUrl, setLogoUrl] = useState(null);
   const [isRoundQR, setIsRoundQR] = useState(false);
+  const [qrColor, setQrColor] = useState('#000000');
   const canvasRef = useRef(null);
   const previewCanvasRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -34,7 +35,7 @@ const QRCodeComponent = () => {
     }
 
     try {
-      await QRCodeUtils.generateQRCode(qrContent, canvasRef.current, version, logoUrl, isRoundQR);
+      await QRCodeUtils.generateQRCode(qrContent, canvasRef.current, version, logoUrl, isRoundQR, qrColor);
     } catch (error) {
       console.error('QR Code Error:', error);
       alert(error.message || 'Failed to generate QR code');
@@ -72,6 +73,13 @@ const QRCodeComponent = () => {
               <option key={v} value={v}>Version {v}</option>
             ))}
           </select>
+          <input
+            type="color"
+            value={qrColor}
+            onChange={(e) => setQrColor(e.target.value)}
+            className="ml-2"
+            title="QR Code Color"
+          />
           {version !== 40 && (
             <label className="flex items-center space-x-2 ml-4">
               <input

@@ -6,7 +6,7 @@ class QRCodeUtils {
     return (version * 4) + 17;
   }
 
-  static async generateQRCode(text, canvas, version = 2, logoUrl = null, isRound = false) {
+  static async generateQRCode(text, canvas, version = 2, logoUrl = null, isRound = false, color = '#000000') {
     try {
       // Set canvas dimensions
       canvas.width = 400;
@@ -21,7 +21,7 @@ class QRCodeUtils {
         width: 400,
         margin: 4,
         color: {
-          dark: '#000000',
+          dark: color,
           light: '#FFFFFF'
         }
       });
@@ -47,7 +47,7 @@ class QRCodeUtils {
               (x < 7 && y >= moduleCount - 7)
             );
 
-            ctx.fillStyle = '#000000';
+            ctx.fillStyle = isFinderPattern ? '#000000' : color;
             if (isFinderPattern) {
               ctx.fillRect(x * dotSize, y * dotSize, dotSize, dotSize);
             } else {

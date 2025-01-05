@@ -66,18 +66,22 @@ class QRCodeUtils {
         }
       }
 
-      if (version === 40 && logoUrl) {
+      if (logoUrl) {
         const logo = new Image();
         logo.src = logoUrl;
         
         await new Promise((resolve, reject) => {
           logo.onload = () => {
-            const logoSize = 80;
-            const x = (canvas.width - logoSize) / 2;
-            const y = (canvas.height - logoSize) / 2;
+            const qrSize = canvas.width;
+            const logoSize = Math.floor(qrSize * 0.25); // 25% of QR code size
+            const x = (qrSize - logoSize) / 2;
+            const y = (qrSize - logoSize) / 2;
             
-            ctx.fillStyle = '#FFFFFF';
+            // Create a semi-transparent white background
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
             ctx.fillRect(x - 5, y - 5, logoSize + 10, logoSize + 10);
+            
+            // Draw logo
             ctx.drawImage(logo, x, y, logoSize, logoSize);
             resolve();
           };

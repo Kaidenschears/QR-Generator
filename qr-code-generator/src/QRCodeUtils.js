@@ -63,7 +63,12 @@ class QRCodeUtils {
 
             tempCtx.fillStyle = isFinderPattern ? '#000000' : color;
             if (isFinderPattern) {
-              tempCtx.fillRect(x * dotSize, y * dotSize, dotSize, dotSize);
+              tempCtx.fillRect(
+                offset + x * dotSize + (qrWidth - actualSize) / 2,
+                offset + y * dotSize + (qrWidth - actualSize) / 2,
+                dotSize,
+                dotSize
+              );
             } else {
               tempCtx.beginPath();
               tempCtx.roundRect(

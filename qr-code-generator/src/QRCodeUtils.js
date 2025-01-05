@@ -9,15 +9,15 @@ class QRCodeUtils {
   static async generateQRCode(text, canvas, version = 2, logoUrl = null, isRound = false, color = '#000000', isBackgroundLogo = false, saturation = 1) {
     try {
       // Set canvas dimensions with padding
-      canvas.width = 450;
-      canvas.height = 450;
+      canvas.width = 500;
+      canvas.height = 500;
       const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = '#FFFFFF';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
       // First generate the basic QR code
-      const qrWidth = 350;
+      const qrWidth = 400;
       await QRCode.toCanvas(canvas, text, {
         version: version,
         errorCorrectionLevel: 'H',

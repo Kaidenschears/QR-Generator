@@ -93,13 +93,37 @@ const QRCodeComponent = () => {
             className="hidden"
           />
           <div className="flex flex-col space-y-2">
-            <button
-              onClick={() => fileInputRef.current.click()}
-              className="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600"
-            >
-              Add Logo
-            </button>
-            {logoUrl && <canvas ref={previewCanvasRef} className="mx-auto border" width="200" height="200" />}
+            {!logoUrl ? (
+              <button
+                onClick={() => fileInputRef.current.click()}
+                className="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600"
+              >
+                Add Logo
+              </button>
+            ) : (
+              <div className="flex flex-col space-y-2">
+                <div className="flex space-x-2">
+                  <button
+                    onClick={() => fileInputRef.current.click()}
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  >
+                    Change Logo
+                  </button>
+                  <button
+                    onClick={async () => {
+                      setLogoUrl(null);
+                      if (canvasRef.current) {
+                        await QRCodeUtils.generateQRCode(qrContent, canvasRef.current, version, null, isRoundQR);
+                      }
+                    }}
+                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                  >
+                    Delete Logo
+                  </button>
+                </div>
+                <canvas ref={previewCanvasRef} className="mx-auto border" width="200" height="200" />
+              </div>
+            )}
           </div>
         </div>
       </div>

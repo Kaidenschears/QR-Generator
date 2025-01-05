@@ -6,7 +6,7 @@ class QRCodeUtils {
     return (version * 4) + 17;
   }
 
-  static async generateQRCode(text, canvas, version = 2, logoUrl = null, isRound = false, color = '#000000', isBackgroundLogo = false, qrOpacity = 1) {
+  static async generateQRCode(text, canvas, version = 2, logoUrl = null, isRound = false, color = '#000000', isBackgroundLogo = false) {
     try {
       // Set canvas dimensions
       canvas.width = 400;
@@ -15,17 +15,15 @@ class QRCodeUtils {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
       // First generate the basic QR code
-      QRCode.toCanvas(canvas, text, {
+      await QRCode.toCanvas(canvas, text, {
         version: version,
         errorCorrectionLevel: 'H',
         width: version >= 30 ? 380 : 400, // Larger size for v30+
         margin: version >= 30 ? 4 : 4, // Consistent margins
         color: {
-          dark: color,
+          dark: isBackgroundLogo ? '#000000' : color,
           light: '#FFFFFF'
-        },
-        quality: 1.0,
-        opacity: isBackgroundLogo ? qrOpacity : 1
+        }
       });
 
       if (isRound && version !== 40) {
@@ -79,27 +77,9 @@ class QRCodeUtils {
             const y = (qrSize - logoSize) / 2;
             
             if (isBackgroundLogo) {
-              // Clear canvas
-              ctx.clearRect(0, 0, canvas.width, canvas.height);
-              ctx.fillStyle = '#FFFFFF';
-              ctx.fillRect(0, 0, canvas.width, canvas.height);
-              
-              // Draw logo as background with specified opacity
-              ctx.globalAlpha = 0.3;
+              // Draw logo as background with 50% opacity
+              ctx.globalAlpha = 0.5;
               ctx.drawImage(logo, 0, 0, canvas.width, canvas.height);
-              
-              // Redraw QR code with specified opacity
-              QRCode.toCanvas(canvas, text, {
-                version: version,
-                errorCorrectionLevel: 'H',
-                width: version >= 30 ? 380 : 400,
-                margin: version >= 30 ? 4 : 4,
-                color: {
-                  dark: color,
-                  light: '#FFFFFF'
-                },
-                quality: 1.0
-              });
               ctx.globalAlpha = 1.0;
             } else {
               // Create a more opaque white background for contrast

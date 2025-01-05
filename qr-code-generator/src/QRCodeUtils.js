@@ -26,7 +26,10 @@ class QRCodeUtils {
       if (isRound) {
         // Get QR code data array
         const qrData = await new Promise((resolve) => {
-          QRCode.create(text, { version }).then((qr) => {
+          QRCode.create(text, {
+            version: version,
+            errorCorrectionLevel: 'H'
+          }).then((qr) => {
             resolve(qr.modules.data);
           });
         });

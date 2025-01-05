@@ -36,14 +36,18 @@ class QRCodeUtils {
           for (let x = 0; x < moduleCount; x++) {
             const i = (Math.floor(y * dotSize) * canvas.width + Math.floor(x * dotSize)) * 4;
             if (data[i] === 0) {
-              const isCorner = (x < 7 && y < 7) || // Top-left
-                             (x > moduleCount - 8 && y < 7) || // Top-right
-                             (x < 7 && y > moduleCount - 8);   // Bottom-left
+              // Define the finder pattern regions more precisely
+              const isInTopLeftFinder = x < 8 && y < 8;
+              const isInTopRightFinder = x >= moduleCount - 8 && y < 8;
+              const isInBottomLeftFinder = x < 8 && y >= moduleCount - 8;
+              const isInFinderPattern = isInTopLeftFinder || isInTopRightFinder || isInBottomLeftFinder;
               
               ctx.fillStyle = '#000000';
-              if (isCorner) {
+              if (isInFinderPattern) {
+                // Draw solid squares for finder patterns
                 ctx.fillRect(x * dotSize, y * dotSize, dotSize, dotSize);
               } else {
+                // Draw rounded rectangles for data modules
                 ctx.beginPath();
                 ctx.roundRect(
                   x * dotSize + padding,

@@ -132,7 +132,10 @@ class QRCodeUtils {
               // Draw QR code with adjusted opacity
               ctx.globalCompositeOperation = 'source-over';
               ctx.globalAlpha = saturation;
-              QRCode.toCanvas(canvas, text, {
+              const tempQrCanvas = document.createElement('canvas');
+              tempQrCanvas.width = canvas.width;
+              tempQrCanvas.height = canvas.height;
+              await QRCode.toCanvas(tempQrCanvas, text, {
                 version: version,
                 errorCorrectionLevel: 'H',
                 width: version >= 30 ? 380 : 400,
@@ -142,6 +145,7 @@ class QRCodeUtils {
                   light: '#FFFFFF'
                 }
               });
+              ctx.drawImage(tempQrCanvas, 0, 0);
               
               // Restore canvas state
               ctx.restore();

@@ -1,4 +1,3 @@
-
 import QRCode from 'qrcode';
 
 class QRCodeUtils {
@@ -27,13 +26,14 @@ class QRCodeUtils {
       });
 
       if (isRound) {
-        const qr = await QRCode.create({
-          text: text,
+        const qr = new QRCode({
           version: version,
           errorCorrectionLevel: 'H'
         });
+        qr.addData(text);
+        qr.make();
 
-        const moduleCount = Math.sqrt(qr.modules.size);
+        const moduleCount = qr.getModuleCount();
         const dotSize = canvas.width / moduleCount;
         const padding = dotSize * 0.15;
 

@@ -37,8 +37,10 @@ class QRCodeUtils {
         const moduleCount = qr.getModuleCount();
         const actualSize = qrWidth * 0.9;
         
-        // Create matrix representation
-        const matrix = Array(moduleCount).fill().map(() => Array(moduleCount).fill(0));
+        // Create padded matrix representation
+        const padding = 4; // Add 4 cells of padding on each side
+        const paddedSize = moduleCount + (padding * 2);
+        const matrix = Array(paddedSize).fill().map(() => Array(paddedSize).fill(0));
         
         // Fill matrix: 0 = white space, 1 = round dot, 2 = square
         for (let y = 0; y < moduleCount; y++) {
@@ -49,7 +51,7 @@ class QRCodeUtils {
                 (x >= moduleCount - 7 && y < 7) ||
                 (x < 7 && y >= moduleCount - 7)
               );
-              matrix[y][x] = isFinderPattern ? 2 : 1;
+              matrix[y + padding][x + padding] = isFinderPattern ? 2 : 1;
             }
           }
         }
@@ -60,35 +62,34 @@ class QRCodeUtils {
         tempCanvas.height = qrWidth;
         const tempCtx = tempCanvas.getContext('2d');
         
-        const dotSize = actualSize / moduleCount;
-        const padding = dotSize * 0.15;
-        const offset = (qrWidth - actualSize) / 2;
+        const dotSize = qrWidth / paddedSize;
+        const dotPadding = dotSize * 0.15;
         
         // Draw on temporary canvas
         tempCtx.fillStyle = '#FFFFFF';
         tempCtx.fillRect(0, 0, qrWidth, qrWidth);
         
         // Render matrix
-        for (let y = 0; y < moduleCount; y++) {
-          for (let x = 0; x < moduleCount; x++) {
+        for (let y = 0; y < paddedSize; y++) {
+          for (let x = 0; x < paddedSize; x++) {
             if (matrix[y][x] === 0) continue;
             
             tempCtx.fillStyle = matrix[y][x] === 2 ? '#000000' : color;
             if (matrix[y][x] === 2) {
               tempCtx.fillRect(
-                offset + x * dotSize + (qrWidth - actualSize) / 2,
-                offset + y * dotSize + (qrWidth - actualSize) / 2,
+                x * dotSize,
+                y * dotSize,
                 dotSize,
                 dotSize
               );
             } else {
               tempCtx.beginPath();
               tempCtx.roundRect(
-                offset + x * dotSize + padding + (qrWidth - actualSize) / 2,
-                offset + y * dotSize + padding + (qrWidth - actualSize) / 2,
-                dotSize - 2 * padding,
-                dotSize - 2 * padding,
-                (dotSize - 2 * padding) / 2
+                x * dotSize + dotPadding,
+                y * dotSize + dotPadding,
+                dotSize - 2 * dotPadding,
+                dotSize - 2 * dotPadding,
+                (dotSize - 2 * dotPadding) / 2
               );
               tempCtx.fill();
             }

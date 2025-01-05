@@ -30,31 +30,37 @@ class QRCodeUtils {
         
         const moduleCount = (version * 4) + 17;
         const dotSize = canvas.width / moduleCount;
-        const padding = dotSize * 0.1;  // 10% padding
+        const padding = dotSize * 0.15;  // 15% padding for smaller dots
 
         for (let y = 0; y < moduleCount; y++) {
           for (let x = 0; x < moduleCount; x++) {
             const i = (Math.floor(y * dotSize) * canvas.width + Math.floor(x * dotSize)) * 4;
             if (data[i] === 0) {
-              // Define the finder pattern regions more precisely
-              const isInTopLeftFinder = x < 8 && y < 8;
-              const isInTopRightFinder = x >= moduleCount - 8 && y < 8;
-              const isInBottomLeftFinder = x < 8 && y >= moduleCount - 8;
-              const isInFinderPattern = isInTopLeftFinder || isInTopRightFinder || isInBottomLeftFinder;
+              // Enhanced finder pattern detection
+              const isInFinderPattern = (x < 7 && y < 7) || // Top-left
+                                      (x >= moduleCount - 7 && y < 7) || // Top-right
+                                      (x < 7 && y >= moduleCount - 7);   // Bottom-left
+              
+              const isFinderBorder = (x === 7 && y <= 7) || 
+                                   (y === 7 && x <= 7) ||
+                                   (x === moduleCount - 8 && y <= 7) ||
+                                   (y === 7 && x >= moduleCount - 8) ||
+                                   (x === 7 && y >= moduleCount - 8) ||
+                                   (y === moduleCount - 8 && x <= 7);
               
               ctx.fillStyle = '#000000';
-              if (isInFinderPattern) {
-                // Draw solid squares for finder patterns
+              if (isInFinderPattern || isFinderBorder) {
+                // Draw solid squares for finder patterns and borders
                 ctx.fillRect(x * dotSize, y * dotSize, dotSize, dotSize);
               } else {
-                // Draw rounded rectangles for data modules
+                // Draw smaller rounded dots for data
                 ctx.beginPath();
                 ctx.roundRect(
                   x * dotSize + padding,
                   y * dotSize + padding,
                   dotSize - 2 * padding,
                   dotSize - 2 * padding,
-                  2
+                  (dotSize - 2 * padding) / 2  // More rounded corners
                 );
                 ctx.fill();
               }

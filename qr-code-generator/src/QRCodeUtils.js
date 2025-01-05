@@ -24,53 +24,45 @@ class QRCodeUtils {
       });
 
       if (isRound) {
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const data = imageData.data;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
+        // Get QR code data array
+        const qrData = await new Promise((resolve) => {
+          QRCode.create(text, { version }).then((qr) => {
+            resolve(qr.modules.data);
+          });
+        });
+
         const moduleCount = (version * 4) + 17;
         const dotSize = canvas.width / moduleCount;
-        const padding = dotSize * 0.15;  // 15% padding for smaller dots
+        const padding = dotSize * 0.15;
 
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
         for (let y = 0; y < moduleCount; y++) {
           for (let x = 0; x < moduleCount; x++) {
-            const i = (Math.floor(y * dotSize) * canvas.width + Math.floor(x * dotSize)) * 4;
-            if (data[i] === 0) {
-              // Precise finder pattern detection including inner and outer squares
-              const isTopLeft = (x < 7 && y < 7);
-              const isTopRight = (x >= moduleCount - 7 && y < 7);
-              const isBottomLeft = (x < 7 && y >= moduleCount - 7);
-              
-              // Inner black square (3x3)
-              const isInnerSquare = (
-                (isTopLeft && x >= 2 && x <= 4 && y >= 2 && y <= 4) ||
-                (isTopRight && x >= moduleCount - 5 && x <= moduleCount - 3 && y >= 2 && y <= 4) ||
-                (isBottomLeft && x >= 2 && x <= 4 && y >= moduleCount - 5 && y <= moduleCount - 3)
+            if (!qrData[y * moduleCount + x]) continue;
+            
+            const isFinderPattern = (
+              // Top-left finder pattern
+              (x < 7 && y < 7) ||
+              // Top-right finder pattern
+              (x >= moduleCount - 7 && y < 7) ||
+              // Bottom-left finder pattern
+              (x < 7 && y >= moduleCount - 7)
+            );
+
+            ctx.fillStyle = '#000000';
+            if (isFinderPattern) {
+              ctx.fillRect(x * dotSize, y * dotSize, dotSize, dotSize);
+            } else {
+              ctx.beginPath();
+              ctx.roundRect(
+                x * dotSize + padding,
+                y * dotSize + padding,
+                dotSize - 2 * padding,
+                dotSize - 2 * padding,
+                (dotSize - 2 * padding) / 2
               );
-              
-              // Outer black frame (7x7)
-              const isOuterFrame = (
-                ((x < 7 && y < 7) || (x >= moduleCount - 7 && y < 7) || (x < 7 && y >= moduleCount - 7)) &&
-                (x === 0 || x === 6 || x === moduleCount - 7 || x === moduleCount - 1 ||
-                 y === 0 || y === 6 || y === moduleCount - 7 || y === moduleCount - 1)
-              );
-              
-              ctx.fillStyle = '#000000';
-              if (isInnerSquare || isOuterFrame) {
-                // Draw solid squares for finder patterns and borders
-                ctx.fillRect(x * dotSize, y * dotSize, dotSize, dotSize);
-              } else {
-                // Draw smaller rounded dots for data
-                ctx.beginPath();
-                ctx.roundRect(
-                  x * dotSize + padding,
-                  y * dotSize + padding,
-                  dotSize - 2 * padding,
-                  dotSize - 2 * padding,
-                  (dotSize - 2 * padding) / 2  // More rounded corners
-                );
-                ctx.fill();
-              }
+              ctx.fill();
             }
           }
         }

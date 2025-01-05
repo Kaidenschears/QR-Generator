@@ -129,7 +129,7 @@ const QRCodeComponent = () => {
                     Delete Logo
                   </button>
                 </div>
-                <canvas ref={previewCanvasRef} className="mx-auto border" width="200" height="200" />
+                <img src={logoUrl} alt="Logo preview" className="mx-auto border" style={{ width: '100px', height: '100px', objectFit: 'contain' }} />
               </div>
             )}
           </div>

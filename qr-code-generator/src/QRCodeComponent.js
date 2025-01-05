@@ -72,15 +72,17 @@ const QRCodeComponent = () => {
               <option key={v} value={v}>Version {v}</option>
             ))}
           </select>
-          <label className="flex items-center space-x-2 ml-4">
-            <input
-              type="checkbox"
-              checked={isRoundQR}
-              onChange={(e) => setIsRoundQR(e.target.checked)}
-              className="form-checkbox"
-            />
-            <span>Round Style</span>
-          </label>
+          {version !== 40 && (
+            <label className="flex items-center space-x-2 ml-4">
+              <input
+                type="checkbox"
+                checked={isRoundQR}
+                onChange={(e) => setIsRoundQR(e.target.checked)}
+                className="form-checkbox"
+              />
+              <span>Round Style</span>
+            </label>
+          )}
         </div>
         {version === 40 && (
           <div className="flex items-center space-x-2">
@@ -99,15 +101,6 @@ const QRCodeComponent = () => {
                 Add Logo
               </button>
               {logoUrl && <canvas ref={previewCanvasRef} className="mx-auto border" width="200" height="200" />}
-              <label className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={isRoundQR}
-                  onChange={(e) => setIsRoundQR(e.target.checked)}
-                  className="form-checkbox"
-                />
-                <span>Round QR Code Style</span>
-              </label>
             </div>
           </div>
         )}

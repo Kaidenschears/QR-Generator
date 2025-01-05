@@ -5,7 +5,18 @@ import QRCodeUtils from './QRCodeUtils';
 const QRCodeComponent = () => {
   const [qrContent, setQRContent] = useState('');
   const [version, setVersion] = useState(2);
+  const [logoUrl, setLogoUrl] = useState(null);
   const canvasRef = useRef(null);
+  const fileInputRef = useRef(null);
+
+  const handleLogoUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => setLogoUrl(e.target.result);
+      reader.readAsDataURL(file);
+    }
+  };
 
   const generateQRCode = async () => {
     if (!qrContent) {
@@ -13,7 +24,7 @@ const QRCodeComponent = () => {
       return;
     }
 
-    const success = await QRCodeUtils.generateQRCode(qrContent, canvasRef.current, version);
+    const success = await QRCodeUtils.generateQRCode(qrContent, canvasRef.current, version, logoUrl);
     if (!success) {
       alert('Failed to generate QR code');
     }
@@ -51,6 +62,23 @@ const QRCodeComponent = () => {
             ))}
           </select>
         </div>
+        {version === 40 && (
+          <div className="flex items-center space-x-2">
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleLogoUpload}
+              accept="image/*"
+              className="hidden"
+            />
+            <button
+              onClick={() => fileInputRef.current.click()}
+              className="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600"
+            >
+              Add Logo
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="flex space-x-4">

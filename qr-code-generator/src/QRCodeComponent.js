@@ -37,7 +37,7 @@ const QRCodeComponent = () => {
     }
 
     try {
-      await QRCodeUtils.generateQRCode(qrContent, canvasRef.current, version, logoUrl, isRoundQR, qrColor, isBackgroundLogo, saturation);
+      await QRCodeUtils.generateQRCode(qrContent, canvasRef.current, version, logoUrl, isRoundQR, qrColor, isBackgroundLogo, opacity);
     } catch (error) {
       console.error('QR Code Error:', error);
       alert(error.message || 'Failed to generate QR code');

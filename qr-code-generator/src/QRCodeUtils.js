@@ -32,8 +32,10 @@ class QRCodeUtils {
         qr.make();
 
         const moduleCount = qr.getModuleCount();
-        const dotSize = canvas.width / moduleCount;
+        const width = version >= 30 ? 380 : 400;
+        const dotSize = width / moduleCount;
         const padding = dotSize * 0.15;
+        const offset = (canvas.width - width) / 2;
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
@@ -49,12 +51,12 @@ class QRCodeUtils {
 
             ctx.fillStyle = isFinderPattern ? '#000000' : color;
             if (isFinderPattern) {
-              ctx.fillRect(x * dotSize, y * dotSize, dotSize, dotSize);
+              ctx.fillRect(x * dotSize + offset, y * dotSize + offset, dotSize, dotSize);
             } else {
               ctx.beginPath();
               ctx.roundRect(
-                x * dotSize + padding,
-                y * dotSize + padding,
+                x * dotSize + offset + padding,
+                y * dotSize + offset + padding,
                 dotSize - 2 * padding,
                 dotSize - 2 * padding,
                 (dotSize - 2 * padding) / 2

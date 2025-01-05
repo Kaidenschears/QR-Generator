@@ -9,7 +9,8 @@ const QRCodeComponent = () => {
   const [isRoundQR, setIsRoundQR] = useState(false);
   const [qrColor, setQrColor] = useState('#000000');
   const [isBackgroundLogo, setIsBackgroundLogo] = useState(false);
-  const [opacity, setOpacity] = useState(0.75);
+  const [opacity, setOpacity] = useState(0.5);
+  const [logoSize, setLogoSize] = useState(30);
   const canvasRef = useRef(null);
   const previewCanvasRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -37,7 +38,7 @@ const QRCodeComponent = () => {
     }
 
     try {
-      await QRCodeUtils.generateQRCode(qrContent, canvasRef.current, version, logoUrl, isRoundQR, qrColor, isBackgroundLogo, opacity);
+      await QRCodeUtils.generateQRCode(qrContent, canvasRef.current, version, logoUrl, isRoundQR, qrColor, isBackgroundLogo, opacity, logoSize);
     } catch (error) {
       console.error('QR Code Error:', error);
       alert(error.message || 'Failed to generate QR code');
@@ -126,12 +127,25 @@ const QRCodeComponent = () => {
                   <input
                     type="range"
                     min="0.1"
-                    max="0.75"
+                    max="0.5"
                     step="0.05"
                     value={opacity}
                     onChange={(e) => setOpacity(parseFloat(e.target.value))}
                     className="w-32"
                   />
+                </div>
+                <div className="flex items-center space-x-2 mb-2">
+                  <span>Logo Size:</span>
+                  <input
+                    type="range"
+                    min="30"
+                    max="100"
+                    step="5"
+                    value={logoSize}
+                    onChange={(e) => setLogoSize(parseInt(e.target.value))}
+                    className="w-32"
+                  />
+                  <span>{logoSize}%</span>
                 </div>
                 <div className="flex space-x-2">
                   <button

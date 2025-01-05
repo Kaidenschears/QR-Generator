@@ -7,7 +7,7 @@ class QRCodeUtils {
     return (version * 4) + 17;
   }
 
-  static async generateQRCode(text, canvas, version = 2, logoUrl = null, isRound = false, color = '#000000', isBackgroundLogo = false, opacity = 0.75) {
+  static async generateQRCode(text, canvas, version = 2, logoUrl = null, isRound = false, color = '#000000', isBackgroundLogo = false, opacity = 0.5, logoSize = 30) {
     try {
       canvas.width = 500;
       canvas.height = 500;
@@ -116,7 +116,9 @@ class QRCodeUtils {
               const tempCtx = tempCanvas.getContext('2d');
               
               // Draw logo on temporary canvas
-              tempCtx.drawImage(logo, 0, 0, canvas.width, canvas.height);
+              const scaledSize = (canvas.width * logoSize) / 100;
+              const offset = (canvas.width - scaledSize) / 2;
+              tempCtx.drawImage(logo, offset, offset, scaledSize, scaledSize);
               tempCtx.globalCompositeOperation = 'destination-in';
               
               // Create QR on main canvas

@@ -77,12 +77,33 @@ class QRCodeUtils {
             const y = (qrSize - logoSize) / 2;
             
             if (isBackgroundLogo) {
-              // Draw logo as background
+              // Save the current canvas state
+              ctx.save();
+              
+              // Draw logo scaled to canvas size
               ctx.drawImage(logo, 0, 0, canvas.width, canvas.height);
               
-              // Draw QR code with specified saturation
+              // Apply multiply blend mode for better contrast
+              ctx.globalCompositeOperation = 'multiply';
+              ctx.fillStyle = '#FFFFFF';
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+              
+              // Draw QR code with adjusted opacity
               ctx.globalCompositeOperation = 'source-over';
               ctx.globalAlpha = saturation;
+              QRCode.toCanvas(canvas, text, {
+                version: version,
+                errorCorrectionLevel: 'H',
+                width: version >= 30 ? 380 : 400,
+                margin: version >= 30 ? 4 : 4,
+                color: {
+                  dark: '#000000',
+                  light: 'rgba(255, 255, 255, 0.1)'
+                }
+              });
+              
+              // Restore canvas state
+              ctx.restore();
             } else {
               // Create a more opaque white background for contrast
               ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';

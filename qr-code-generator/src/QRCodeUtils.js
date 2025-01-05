@@ -1,4 +1,3 @@
-
 import QRCode from 'qrcode';
 import qrcodeGenerator from 'qrcode-generator';
 

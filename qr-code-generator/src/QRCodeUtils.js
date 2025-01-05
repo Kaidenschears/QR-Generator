@@ -21,10 +21,11 @@ class QRCodeUtils {
         width: version >= 30 ? 380 : 400, // Larger size for v30+
         margin: version >= 30 ? 4 : 4, // Consistent margins
         color: {
-          dark: isBackgroundLogo ? `rgba(0, 0, 0, ${qrOpacity})` : color,
+          dark: color,
           light: '#FFFFFF'
         },
-        quality: 1.0
+        quality: 1.0,
+        opacity: isBackgroundLogo ? qrOpacity : 1
       });
 
       if (isRound && version !== 40) {

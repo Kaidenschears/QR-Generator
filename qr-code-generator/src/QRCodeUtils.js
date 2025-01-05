@@ -23,7 +23,7 @@ class QRCodeUtils {
         width: qrWidth,
         margin: 4,
         color: {
-          dark: isBackgroundLogo ? '#000000' : color,
+          dark: color,
           light: '#FFFFFF'
         }
       });

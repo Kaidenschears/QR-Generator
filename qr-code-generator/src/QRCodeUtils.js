@@ -80,8 +80,12 @@ class QRCodeUtils {
             ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
             ctx.fillRect(x - 5, y - 5, logoSize + 10, logoSize + 10);
             
-            // Draw logo
+            // Draw logo with transparency for v40
+            if (version === 40) {
+              ctx.globalAlpha = 0.8;  // 80% opacity for v40
+            }
             ctx.drawImage(logo, x, y, logoSize, logoSize);
+            ctx.globalAlpha = 1.0;  // Reset opacity
             resolve();
           };
           logo.onerror = reject;

@@ -70,7 +70,7 @@ const QRCodeComponent = () => {
             onChange={(e) => setVersion(Number(e.target.value))}
             className="px-2 py-1 border rounded"
           >
-            {[1,2,3,4,5,6,30,40].map(v => (
+            {[1,2,3,4,5,6,30].map(v => (
               <option key={v} value={v}>Version {v}</option>
             ))}
           </select>

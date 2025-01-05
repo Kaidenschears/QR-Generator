@@ -21,8 +21,8 @@ class QRCodeUtils {
         width: version >= 30 ? 380 : 400, // Larger size for v30+
         margin: version >= 30 ? 4 : 4, // Consistent margins
         color: {
-          dark: isBackgroundLogo ? '#000000' : color, // Force black for better contrast with background logo
-          light: isBackgroundLogo ? 'rgba(255, 255, 255, 0.95)' : '#FFFFFF' // More opaque white background
+          dark: isBackgroundLogo ? '#000000' : color,
+          light: '#FFFFFF'
         }
       });
 
@@ -72,7 +72,7 @@ class QRCodeUtils {
         await new Promise((resolve, reject) => {
           logo.onload = () => {
             const qrSize = canvas.width;
-            const logoSize = Math.floor(qrSize * (version === 40 ? 0.13 : 0.25)); // 13% for v40, 25% for others
+            const logoSize = Math.floor(qrSize * 0.25); // 25% of QR code size
             const x = (qrSize - logoSize) / 2;
             const y = (qrSize - logoSize) / 2;
             

@@ -117,6 +117,7 @@ class QRCodeUtils {
 
               // Calculate logo size based on slider value (30-100%)
               const scaledSize = canvas.width * (logoSize / 100);
+              console.log(logoSize);
               const offset = (canvas.width - scaledSize) / 2;
               
               // Draw and apply opacity to logo first

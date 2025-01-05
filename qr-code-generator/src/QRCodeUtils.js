@@ -30,17 +30,27 @@ class QRCodeUtils {
         
         const moduleCount = (version * 4) + 17;
         const dotSize = canvas.width / moduleCount;
-        const radius = dotSize / 1.8; // Increased dot size
+        const radius = dotSize / 1.8;
         const offset = dotSize / 2;
 
         for (let y = 0; y < moduleCount; y++) {
           for (let x = 0; x < moduleCount; x++) {
             const i = (Math.floor(y * dotSize) * canvas.width + Math.floor(x * dotSize)) * 4;
             if (data[i] === 0) {
-              ctx.beginPath();
-              ctx.arc(x * dotSize + offset, y * dotSize + offset, radius, 0, Math.PI * 2);
-              ctx.fillStyle = '#000000';
-              ctx.fill();
+              // Check if current position is in the finder pattern area
+              const isCorner = (x < 7 && y < 7) || // Top-left
+                             (x > moduleCount - 8 && y < 7) || // Top-right
+                             (x < 7 && y > moduleCount - 8);   // Bottom-left
+              
+              if (isCorner) {
+                ctx.fillStyle = '#000000';
+                ctx.fillRect(x * dotSize, y * dotSize, dotSize, dotSize);
+              } else {
+                ctx.beginPath();
+                ctx.arc(x * dotSize + offset, y * dotSize + offset, radius, 0, Math.PI * 2);
+                ctx.fillStyle = '#000000';
+                ctx.fill();
+              }
             }
           }
         }

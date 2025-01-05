@@ -122,31 +122,35 @@ const QRCodeComponent = () => {
                   />
                   <span>Background Logo</span>
                 </div>
-                <div className="flex items-center space-x-2 mb-2">
-                  <span>Logo Opacity:</span>
-                  <input
-                    type="range"
-                    min="0.1"
-                    max="0.5"
-                    step="0.05"
-                    value={opacity}
-                    onChange={(e) => setOpacity(parseFloat(e.target.value))}
-                    className="w-32"
-                  />
-                </div>
-                <div className="flex items-center space-x-2 mb-2">
-                  <span>Logo Size:</span>
-                  <input
-                    type="range"
-                    min="30"
-                    max="100"
-                    step="5"
-                    value={logoSize}
-                    onChange={(e) => setLogoSize(parseInt(e.target.value))}
-                    className="w-32"
-                  />
-                  <span>{logoSize}%</span>
-                </div>
+                {isBackgroundLogo && (
+                  <>
+                    <div className="flex items-center space-x-2 mb-2">
+                      <span>Logo Opacity:</span>
+                      <input
+                        type="range"
+                        min="0.1"
+                        max="0.5"
+                        step="0.05"
+                        value={opacity}
+                        onChange={(e) => setOpacity(parseFloat(e.target.value))}
+                        className="w-32"
+                      />
+                    </div>
+                    <div className="flex items-center space-x-2 mb-2">
+                      <span>Logo Size:</span>
+                      <input
+                        type="range"
+                        min="30"
+                        max="100"
+                        step="5"
+                        value={logoSize}
+                        onChange={(e) => setLogoSize(parseInt(e.target.value))}
+                        className="w-32"
+                      />
+                      <span>{logoSize}%</span>
+                    </div>
+                  </>
+                )}
                 <div className="flex space-x-2">
                   <button
                     onClick={() => fileInputRef.current.click()}

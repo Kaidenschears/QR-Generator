@@ -72,7 +72,7 @@ class QRCodeUtils {
         await new Promise((resolve, reject) => {
           logo.onload = () => {
             const qrSize = canvas.width;
-            const logoSize = Math.floor(qrSize * 0.25); // 25% of QR code size
+            const logoSize = Math.floor(qrSize * (version === 40 ? 0.20 : 0.25)); // 20% for v40, 25% for others
             const x = (qrSize - logoSize) / 2;
             const y = (qrSize - logoSize) / 2;
             

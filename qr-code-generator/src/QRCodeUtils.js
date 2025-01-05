@@ -40,6 +40,10 @@ class QRCodeUtils {
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
+        // Add white background
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
         for (let y = 0; y < moduleCount; y++) {
           for (let x = 0; x < moduleCount; x++) {
             if (!qr.isDark(y, x)) continue;

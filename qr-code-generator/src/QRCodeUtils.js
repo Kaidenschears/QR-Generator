@@ -123,15 +123,16 @@ class QRCodeUtils {
               tempCtx.drawImage(logo, 0, 0, canvas.width, canvas.height); // Draw full size first
               tempCtx.globalCompositeOperation = 'source-in';
 
-              // Create QR on main canvas
+              // Draw logo with opacity
+              ctx.save();
               ctx.globalAlpha = opacity;
               ctx.drawImage(logo, offset, offset, scaledSize, scaledSize);
+              ctx.restore();
               
               // Blend back to main canvas
               ctx.globalCompositeOperation = 'multiply';
               ctx.drawImage(tempCanvas, 0, 0);
               ctx.globalCompositeOperation = 'source-over';
-              ctx.globalAlpha = 1.0;
             } else {
               ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
               ctx.fillRect(x - 8, y - 8, logoSize + 16, logoSize + 16);

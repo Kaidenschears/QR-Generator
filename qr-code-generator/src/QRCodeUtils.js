@@ -22,8 +22,9 @@ class QRCodeUtils {
         margin: version >= 30 ? 4 : 4, // Consistent margins
         color: {
           dark: isBackgroundLogo ? '#000000' : color,
-          light: '#FFFFFF'
-        }
+          light: isBackgroundLogo ? '#ffffff' : '#FFFFFF'
+        },
+        quality: 1.0
       });
 
       if (isRound && version !== 40) {

@@ -98,7 +98,7 @@ class QRCodeUtils {
                 margin: version >= 30 ? 4 : 4,
                 color: {
                   dark: '#000000',
-                  light: 'rgba(255, 255, 255, 0.1)'
+                  light: '#FFFFFF'
                 }
               });
               

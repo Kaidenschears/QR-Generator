@@ -1,0 +1,32 @@
+dule build failed (from ./node_modules/babel-loader/lib/index.js):
+SyntaxError: /home/runner/QR-Generator/qr-code-generator/src/QRCodeUtils.js: Unexpected reserved word 'await'. (138:14)
+
+  136 |               tempQrCanvas.width = canvas.width;
+  137 |               tempQrCanvas.height = canvas.height;
+> 138 |               await QRCode.toCanvas(tempQrCanvas, text, {
+      |               ^
+  139 |                 version: version,
+  140 |                 errorCorrectionLevel: 'H',
+  141 |                 width: version >= 30 ? 380 : 400,
+    at constructor (/home/runner/QR-Generator/qr-code-generator/node_modules/@babel/parser/lib/index.js:359:19)
+    at FlowParserMixin.raise (/home/runner/QR-Generator/qr-code-generator/node_modules/@babel/parser/lib/index.js:3266:19)
+    at FlowParserMixin.checkReservedWord (/home/runner/QR-Generator/qr-code-generator/node_modules/@babel/parser/lib/index.js:11764:12)
+    at FlowParserMixin.parseIdentifierName (/home/runner/QR-Generator/qr-code-generator/node_modules/@babel/parser/lib/index.js:11744:12)
+    at FlowParserMixin.parseIdentifier (/home/runner/QR-Generator/qr-code-generator/node_modules/@babel/parser/lib/index.js:11719:23)
+    at FlowParserMixin.parseExprAtom (/home/runner/QR-Generator/qr-code-generator/node_modules/@babel/parser/lib/index.js:10961:27)
+    at FlowParserMixin.parseExprAtom (/home/runner/QR-Generator/qr-code-generator/node_modules/@babel/parser/lib/index.js:6818:20)
+    at FlowParserMixin.parseExprSubscripts (/home/runner/QR-Generator/qr-code-generator/node_modules/@babel/parser/lib/index.js:10619:23)
+    at FlowParserMixin.parseUpdate (/home/runner/QR-Generator/qr-code-generator/node_modules/@babel/parser/lib/index.js:10604:21)
+    at FlowParserMixin.parseMaybeUnary (/home/runner/QR-Generator/qr-code-generator/node_modules/@babel/parser/lib/index.js:10584:23)
+    at FlowParserMixin.parseMaybeUnaryOrPrivate (/home/runner/QR-Generator/qr-code-generator/node_modules/@babel/parser/lib/index.js:10438:61)
+    at FlowParserMixin.parseExprOps (/home/runner/QR-Generator/qr-code-generator/node_modules/@babel/parser/lib/index.js:10443:23)
+    at FlowParserMixin.parseMaybeConditional (/home/runner/QR-Generator/qr-code-generator/node_modules/@babel/parser/lib/index.js:10420:23)
+    at FlowParserMixin.parseMaybeAssign (/home/runner/QR-Generator/qr-code-generator/node_modules/@babel/parser/lib/index.js:10383:21)
+    at FlowParserMixin.parseMaybeAssign (/home/runner/QR-Generator/qr-code-generator/node_modules/@babel/parser/lib/index.js:5685:18)
+    at FlowParserMixin.parseExpressionBase (/home/runner/QR-Generator/qr-code-generator/node_modules/@babel/parser/lib/index.js:10337:23)
+    at /home/runner/QR-Generator/qr-code-generator/node_modules/@babel/parser/lib/index.js:10333:39
+    at FlowParserMixin.allowInAnd (/home/runner/QR-Generator/qr-code-generator/node_modules/@babel/parser/lib/index.js:11950:16)
+    at FlowParserMixin.parseExpression (/home/runner/QR-Generator/qr-code-generator/node_modules/@babel/parser/lib/index.js:10333:17)
+    at FlowParserMixin.parseStatementContent (/home/runner/QR-Generator/qr-code-generator/node_modules/@babel/parser/lib/index.js:12394:23)
+    at FlowParserMixin.parseStatementLike (/home/runner/QR-Generator/qr-code-generator/node_modules/@babel/parser/lib/index.js:12261:17)
+    at FlowParserMixin.parseStatementLike (/home/runner/QR-Generator/qr-code-generator/node_mo

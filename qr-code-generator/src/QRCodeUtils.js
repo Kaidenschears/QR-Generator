@@ -1,4 +1,5 @@
 import QRCode from 'qrcode';
+import qrcode from 'qrcode'; //Import qrcode library
 
 class QRCodeUtils {
   static getVersionSize(version) {
@@ -26,10 +27,7 @@ class QRCodeUtils {
       });
 
       if (isRound) {
-        const qr = new QRCode({
-          version: version,
-          errorCorrectionLevel: 'H'
-        });
+        const qr = qrcode(version, 'H');
         qr.addData(text);
         qr.make();
 

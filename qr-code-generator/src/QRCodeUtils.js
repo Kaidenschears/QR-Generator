@@ -18,7 +18,7 @@ class QRCodeUtils {
       await QRCode.toCanvas(canvas, text, {
         version: version,
         errorCorrectionLevel: 'H',
-        width: 380,
+        width: 350,
         margin: 4,
         color: {
           dark: isBackgroundLogo ? '#000000' : color,
@@ -32,9 +32,9 @@ class QRCodeUtils {
         qr.make();
 
         const moduleCount = qr.getModuleCount();
-        const width = 380;
+        const width = 350;
         const dotSize = width / moduleCount;
-        const padding = dotSize * 0.25;
+        const padding = dotSize * 0.15;
         const offset = (canvas.width - width) / 2;
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);

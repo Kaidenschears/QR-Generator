@@ -17,7 +17,7 @@ class QRCodeUtils {
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
       // First generate the basic QR code
-      const qrWidth = 360;
+      const qrWidth = 400;
       await QRCode.toCanvas(canvas, text, {
         version: version,
         errorCorrectionLevel: 'H',
@@ -35,7 +35,7 @@ class QRCodeUtils {
         qr.make();
 
         const moduleCount = qr.getModuleCount();
-        const actualSize = qrWidth * 0.8; // Make QR code smaller for better centering
+        const actualSize = qrWidth * 0.9; // Make QR code slightly smaller to add padding
         
         // Create temporary canvas for QR code
         const tempCanvas = document.createElement('canvas');

@@ -6,7 +6,7 @@ class QRCodeUtils {
     return (version * 4) + 17;
   }
 
-  static async generateQRCode(text, canvas, version = 2, logoUrl = null, isRound = false, color = '#000000', isBackgroundLogo = false) {
+  static async generateQRCode(text, canvas, version = 2, logoUrl = null, isRound = false, color = '#000000', isBackgroundLogo = false, saturation = 1) {
     try {
       // Set canvas dimensions
       canvas.width = 400;
@@ -77,10 +77,12 @@ class QRCodeUtils {
             const y = (qrSize - logoSize) / 2;
             
             if (isBackgroundLogo) {
-              // Draw logo as background with 50% opacity
-              ctx.globalAlpha = 0.5;
+              // Draw logo as background
               ctx.drawImage(logo, 0, 0, canvas.width, canvas.height);
-              ctx.globalAlpha = 1.0;
+              
+              // Draw QR code with specified saturation
+              ctx.globalCompositeOperation = 'source-over';
+              ctx.globalAlpha = saturation;
             } else {
               // Create a more opaque white background for contrast
               ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';

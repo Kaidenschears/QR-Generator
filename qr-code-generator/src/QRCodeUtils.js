@@ -6,7 +6,7 @@ class QRCodeUtils {
     return (version * 4) + 17;
   }
 
-  static async generateQRCode(text, canvas, version = 2, logoUrl = null, isRound = false, color = '#000000', isBackgroundLogo = false) {
+  static async generateQRCode(text, canvas, version = 2, logoUrl = null, isRound = false, color = '#000000', isBackgroundLogo = false, qrOpacity = 1) {
     try {
       // Set canvas dimensions
       canvas.width = 400;
@@ -21,8 +21,8 @@ class QRCodeUtils {
         width: version >= 30 ? 380 : 400, // Larger size for v30+
         margin: version >= 30 ? 4 : 4, // Consistent margins
         color: {
-          dark: isBackgroundLogo ? '#000000' : color,
-          light: isBackgroundLogo ? '#ffffff' : '#FFFFFF'
+          dark: isBackgroundLogo ? `rgba(0, 0, 0, ${qrOpacity})` : color,
+          light: '#FFFFFF'
         },
         quality: 1.0
       });

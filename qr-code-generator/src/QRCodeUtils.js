@@ -109,29 +109,25 @@ class QRCodeUtils {
             const y = (qrSize - logoSize) / 2;
             
             if (isBackgroundLogo) {
-              ctx.save();
-              ctx.drawImage(logo, 0, 0, canvas.width, canvas.height);
-              ctx.globalCompositeOperation = 'multiply';
-              ctx.fillStyle = '#FFFFFF';
-              ctx.fillRect(0, 0, canvas.width, canvas.height);
+              // Create temporary canvas for blending
+              const tempCanvas = document.createElement('canvas');
+              tempCanvas.width = canvas.width;
+              tempCanvas.height = canvas.height;
+              const tempCtx = tempCanvas.getContext('2d');
               
-              ctx.globalCompositeOperation = 'source-over';
+              // Draw logo on temporary canvas
+              tempCtx.drawImage(logo, 0, 0, canvas.width, canvas.height);
+              tempCtx.globalCompositeOperation = 'destination-in';
+              
+              // Create QR on main canvas
               ctx.globalAlpha = saturation;
-              const tempQrCanvas = document.createElement('canvas');
-              tempQrCanvas.width = canvas.width;
-              tempQrCanvas.height = canvas.height;
-              await QRCode.toCanvas(tempQrCanvas, text, {
-                version: version,
-                errorCorrectionLevel: 'H',
-                width: version >= 30 ? 380 : 400,
-                margin: version >= 30 ? 4 : 4,
-                color: {
-                  dark: '#000000',
-                  light: '#FFFFFF'
-                }
-              });
-              ctx.drawImage(tempQrCanvas, 0, 0);
-              ctx.restore();
+              tempCtx.drawImage(canvas, 0, 0);
+              
+              // Blend back to main canvas
+              ctx.globalCompositeOperation = 'multiply';
+              ctx.drawImage(tempCanvas, 0, 0);
+              ctx.globalCompositeOperation = 'source-over';
+              ctx.globalAlpha = 1.0;
             } else {
               ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
               ctx.fillRect(x - 8, y - 8, logoSize + 16, logoSize + 16);

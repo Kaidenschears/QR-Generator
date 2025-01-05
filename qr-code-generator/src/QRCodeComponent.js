@@ -9,7 +9,7 @@ const QRCodeComponent = () => {
   const [isRoundQR, setIsRoundQR] = useState(false);
   const [qrColor, setQrColor] = useState('#000000');
   const [isBackgroundLogo, setIsBackgroundLogo] = useState(false);
-  const [saturation, setSaturation] = useState(1);
+  const [opacity, setOpacity] = useState(0.75);
   const canvasRef = useRef(null);
   const previewCanvasRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -122,14 +122,14 @@ const QRCodeComponent = () => {
                   <span>Background Logo</span>
                 </div>
                 <div className="flex items-center space-x-2 mb-2">
-                  <span>QR Saturation:</span>
+                  <span>Logo Opacity:</span>
                   <input
                     type="range"
                     min="0.1"
-                    max="1"
-                    step="0.1"
-                    value={saturation}
-                    onChange={(e) => setSaturation(parseFloat(e.target.value))}
+                    max="0.75"
+                    step="0.05"
+                    value={opacity}
+                    onChange={(e) => setOpacity(parseFloat(e.target.value))}
                     className="w-32"
                   />
                 </div>

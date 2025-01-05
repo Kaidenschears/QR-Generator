@@ -7,7 +7,7 @@ class QRCodeUtils {
     return (version * 4) + 17;
   }
 
-  static async generateQRCode(text, canvas, version = 2, logoUrl = null, isRound = false, color = '#000000', isBackgroundLogo = false, saturation = 1) {
+  static async generateQRCode(text, canvas, version = 2, logoUrl = null, isRound = false, color = '#000000', isBackgroundLogo = false, opacity = 0.75) {
     try {
       canvas.width = 500;
       canvas.height = 500;
@@ -120,7 +120,7 @@ class QRCodeUtils {
               tempCtx.globalCompositeOperation = 'destination-in';
               
               // Create QR on main canvas
-              ctx.globalAlpha = saturation;
+              ctx.globalAlpha = opacity;
               tempCtx.drawImage(canvas, 0, 0);
               
               // Blend back to main canvas

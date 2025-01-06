@@ -34,7 +34,7 @@ class QRCodeUtils {
         qr.make();
 
         const moduleCount = qr.getModuleCount();
-        const actualSize = qrWidth * 0.9;
+        // const actualSize = qrWidth * 0.9;
         
         const padding = 4;
         const paddedSize = moduleCount + (padding * 2);

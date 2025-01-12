@@ -1,10 +1,9 @@
-
 import React, { useState, useRef } from 'react';
 import QRCodeUtils from './QRCodeUtils';
 
 const QRCodeComponent = () => {
   const [qrContent, setQRContent] = useState('');
-  const [version, setVersion] = useState(2);
+  const [version, setVersion] = useState(10);
   const [logoUrl, setLogoUrl] = useState(null);
   const [isRoundQR, setIsRoundQR] = useState(false);
   const [qrColor, setQrColor] = useState('#000000');
@@ -72,7 +71,7 @@ const QRCodeComponent = () => {
             onChange={(e) => setVersion(Number(e.target.value))}
             className="px-2 py-1 border rounded"
           >
-            {[1,2,3,4,5,6,30].map(v => (
+            {[1,2,3,4,5,6,10,15,20,25,30].map(v => (
               <option key={v} value={v}>Version {v}</option>
             ))}
           </select>
@@ -186,12 +185,14 @@ const QRCodeComponent = () => {
         </button>
       </div>
 
-      <div className="mt-4">
-        <canvas 
-          ref={canvasRef}
-          className="mx-auto border"
-          style={{ backgroundColor: 'white' }}
-        />
+      <div className="mt-4 w-full max-w-full overflow-hidden px-4">
+        <div className="relative w-full max-w-[min(500px,90vw)] mx-auto">
+          <canvas 
+            ref={canvasRef}
+            className="w-full h-auto border"
+            style={{ backgroundColor: 'white', maxWidth: '100%', objectFit: 'contain' }}
+          />
+        </div>
         <button 
           onClick={handleDownload}
           className="mt-4 w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"

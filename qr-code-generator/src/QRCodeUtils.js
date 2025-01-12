@@ -34,7 +34,7 @@ class QRCodeUtils {
         qr.make();
 
         const moduleCount = qr.getModuleCount();
-        // const actualSize = qrWidth * 0.9;
+        const actualSize = qrWidth * 0.9;
         
         const padding = 4;
         const paddedSize = moduleCount + (padding * 2);
@@ -156,10 +156,8 @@ class QRCodeUtils {
         isRound: isRound
       });
       
-      if (error.message.includes('version')) {
-        throw new Error('Invalid QR version - try a lower version number');
-      } else if (error.message.includes('too long')) {
-        throw new Error('Text content is too long for selected QR version');
+      if (error.message.includes('too long') || error.message.includes('version')) {
+        throw new Error('Text content is too long - try using a higher QR version');
       } else {
         throw new Error(`Failed to generate QR code: ${error.message}`);
       }
